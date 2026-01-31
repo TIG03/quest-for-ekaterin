@@ -1,0 +1,4967 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Квест для Екатерины</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Roboto+Slab:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Сброс стилей и общие настройки */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Slab', serif;
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+            max-width: 1920px;
+            margin: 0 auto;
+            background: #000;
+        }
+
+        /* Слайды */
+        .slide {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 2;
+        }
+
+        /* Стили для первого слайда */
+        .slide-1 {
+            background-image: url('https://s5.iimage.su/s/29/th_gnva9bdxTT8DNHG2MMy17NEMDnsnJXsjEgSVfrnd.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Декоративные числа 25 - анимированные */
+        .numbers-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .number-25 {
+            position: absolute;
+            font-family: 'Roboto Slab', serif;
+            font-weight: bold;
+            user-select: none;
+            animation: rainFall 15s linear infinite, fadeInOut 15s ease-in-out infinite;
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 0.8; }
+        }
+
+        @keyframes numberDance {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        /* Контейнер контента для первого слайда */
+        .content-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            width: 90%;
+            padding: 20px;
+        }
+
+        /* Заголовок */
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 60px;
+            color: #8a2be2;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4), 0 0 20px rgba(76, 175, 80, 0.3);
+            margin-bottom: 40px;
+            line-height: 1.2;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4), 0 0 20px rgba(138, 43, 226, 0.3); }
+            50% { text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4), 0 0 30px rgba(138, 43, 226, 0.6), 0 0 40px rgba(138, 43, 226, 0.4); }
+        }
+
+        /* Блок с текстом */
+        .text-block {
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            backdrop-filter: blur(5px);
+            margin-bottom: 40px;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: blockFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes blockFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .text-content {
+            font-size: 20px;
+            line-height: 1.6;
+            white-space: pre-line;
+            width: 100%;
+            min-height: 150px;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 24px;
+            background-color: #333;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Убегающая кнопка */
+        .runaway-btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 500;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #8a2be2;
+            color: white;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s linear;
+            z-index: 100;
+            display: none;
+            white-space: nowrap;
+            animation: buttonPulse 2s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+            50% { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); }
+        }
+
+        .runaway-btn.caught {
+            cursor: pointer;
+            animation: pulse 2s infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) !important;
+            transition: all 1s ease !important;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(138, 43, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+        }
+
+        /* Таймер сообщение */
+        .timer-message {
+            font-size: 20px;
+            color: #8a2be2;
+            font-weight: bold;
+            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            top: 75%;
+            left: 0;
+            margin-top: 15px;
+            animation: messageGlow 2s infinite;
+        }
+
+        @keyframes messageGlow {
+            0%, 100% { text-shadow: 0 0 5px rgba(138, 43, 226, 0.5); }
+            50% { text-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 25px rgba(138, 43, 226, 0.4); }
+        }
+
+        .timer-message.show {
+            opacity: 1;
+        }
+
+        /* Кнопка перехода (большая) */
+        .big-btn {
+            padding: 25px 50px;
+            border: none;
+            border-radius: 60px;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 600;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #8a2be2, #4b0082);
+            color: white;
+            margin-top: 30px;
+            display: none;
+            width: 80%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+            animation: btnEntrance 1s ease-out;
+        }
+
+        @keyframes btnEntrance {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .big-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #9b36f0, #5c0fa1);
+        }
+
+        .big-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .big-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .big-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Контейнер для кнопок */
+        .buttons-container {
+            position: relative;
+            min-height: 150px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Стили для второго слайда */
+        .slide-2 {
+            background-image: url('https://radika1.link/2026/01/29/maxresdefaultc92e59e94b8612a5.jpg');
+            background-size: cover;
+            background-position: center 70%;
+            background-attachment: fixed;
+            justify-content: flex-start;
+            padding-top: 40px;
+        }
+
+        /* Декоративные изображения Екатерины */
+        .images-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .decorative-image {
+            position: absolute;
+            border-radius: 10px;
+            opacity: 0.6;
+            filter: sepia(0.2) brightness(1.1);
+            user-select: none;
+            object-fit: cover;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: imageFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes imageFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(2deg); }
+            66% { transform: translateY(10px) rotate(-2deg); }
+        }
+
+        /* Декоративные числа 1-9 */
+        .numbers-container-2 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .number {
+            position: absolute;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 900;
+            opacity: 0.8;
+            user-select: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            animation: numberFloat 10s ease-in-out infinite;
+        }
+
+        @keyframes numberFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5px, -5px) rotate(1deg); }
+            50% { transform: translate(-5px, 5px) rotate(-1deg); }
+            75% { transform: translate(5px, 5px) rotate(1deg); }
+        }
+
+        /* Контейнер контента для второго слайда */
+        .content-container-2 {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-top: 20px;
+            border: 3px solid #8a2be2;
+            backdrop-filter: blur(5px);
+            animation: containerEntrance 0.8s ease-out;
+        }
+
+        @keyframes containerEntrance {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Рамка с загадкой */
+        .riddle-frame {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border: 2px solid #8a2be2;
+            animation: riddleGlow 3s infinite;
+        }
+
+        @keyframes riddleGlow {
+            0%, 100% { box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); }
+            50% { box-shadow: 0 5px 30px rgba(138, 43, 226, 0.3); }
+        }
+
+        .riddle-text {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 500;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-line;
+        }
+
+        /* Форма ответа */
+        .answer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        .input-label {
+            font-size: 18px;
+            font-weight: 500;
+            color: #555;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-input {
+            padding: 15px 20px;
+            border: 2px solid #8a2be2;
+            border-radius: 10px;
+            font-size: 18px;
+            font-family: 'Roboto Slab', serif;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            animation: inputPulse 2s infinite;
+        }
+
+        @keyframes inputPulse {
+            0%, 100% { border-color: #8a2be2; }
+            50% { border-color: #9b36f0; }
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #4b0082;
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+            background-color: white;
+            animation: none;
+        }
+
+        /* Индикатор ответа */
+        .answer-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 10px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .answer-indicator.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: inline-block;
+        }
+
+        .indicator-dot.correct {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px #4CAF50;
+            animation: dotPulse 1s infinite;
+        }
+
+        .indicator-dot.incorrect {
+            background-color: #f44336;
+            box-shadow: 0 0 8px #f44336;
+            animation: dotShake 0.5s;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes dotShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        /* Кнопки второго слайда */
+        .buttons-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 500;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: #8a2be2;
+            color: white;
+            flex: 1;
+            min-width: 150px;
+            animation: buttonGlow 2s infinite;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4); }
+        }
+
+        .btn-secondary {
+            background-color: rgba(240, 240, 240, 0.9);
+            color: #333;
+            border: 2px solid #8a2be2;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Таймер второго слайда */
+        .timer-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(138, 43, 226, 0.15);
+            border-radius: 10px;
+            border: 1px solid #8a2be2;
+            backdrop-filter: blur(3px);
+            animation: timerPulse 2s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { background-color: rgba(138, 43, 226, 0.15); }
+            50% { background-color: rgba(138, 43, 226, 0.25); }
+        }
+
+        .timer-text {
+            font-size: 20px;
+            color: #8a2be2;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .timer {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4b0082;
+            font-family: monospace;
+            animation: timerDigit 1s infinite;
+        }
+
+        @keyframes timerDigit {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Стили для третьего слайда */
+        .slide-3 {
+            background-image: url('https://gorodovoy.ru/upload/upload/news/234037902914.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            justify-content: flex-start;
+            padding-top: 40px;
+        }
+
+        /* Контейнер контента для третьего слайда */
+        .content-container-3 {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-top: 20px;
+            border: 3px solid #ff6b6b;
+            backdrop-filter: blur(5px);
+            animation: containerEntrance 0.8s ease-out;
+        }
+
+        /* Заголовок третьего слайда */
+        .main-title-3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 64px;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            line-height: 1.2;
+            animation: titleGlowRed 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlowRed {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 107, 107, 0.3); }
+            50% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 107, 107, 0.6), 0 0 30px rgba(255, 107, 107, 0.4); }
+        }
+
+        /* Рамка с загадкой третьего слайда */
+        .riddle-frame-3 {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border: 2px solid #ff6b6b;
+            animation: riddleGlowRed 3s infinite;
+        }
+
+        @keyframes riddleGlowRed {
+            0%, 100% { box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); }
+            50% { box-shadow: 0 5px 30px rgba(255, 107, 107, 0.3); }
+        }
+
+        /* Форма ответа третьего слайда */
+        .answer-input-3 {
+            padding: 15px 20px;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            font-size: 18px;
+            font-family: 'Roboto Slab', serif;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            animation: inputPulseRed 2s infinite;
+        }
+
+        @keyframes inputPulseRed {
+            0%, 100% { border-color: #ff6b6b; }
+            50% { border-color: #ff8c8c; }
+        }
+
+        .answer-input-3:focus {
+            outline: none;
+            border-color: #ff4757;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+            background-color: white;
+            animation: none;
+        }
+
+        /* Кнопки третьего слайда */
+        .btn-primary-3 {
+            background-color: #ff6b6b;
+            color: white;
+            flex: 1;
+            min-width: 150px;
+            animation: buttonGlowRed 2s infinite;
+        }
+
+        @keyframes buttonGlowRed {
+            0%, 100% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4); }
+        }
+
+        .btn-secondary-3 {
+            background-color: rgba(240, 240, 240, 0.9);
+            color: #333;
+            border: 2px solid #ff6b6b;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Таймер третьего слайда */
+        .timer-container-3 {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 107, 107, 0.15);
+            border-radius: 10px;
+            border: 1px solid #ff6b6b;
+            backdrop-filter: blur(3px);
+            animation: timerPulseRed 2s infinite;
+        }
+
+        @keyframes timerPulseRed {
+            0%, 100% { background-color: rgba(255, 107, 107, 0.15); }
+            50% { background-color: rgba(255, 107, 107, 0.25); }
+        }
+
+        .timer-text-3 {
+            font-size: 20px;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .timer-3 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff4757;
+            font-family: monospace;
+            animation: timerDigit 1s infinite;
+        }
+
+        /* Стили для четвертого слайда */
+        .slide-4 {
+            background-image: url('https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            justify-content: flex-start;
+            padding-top: 30px;
+        }
+
+        /* Контейнер контента для четвертого слайда */
+        .content-container-4 {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 700px;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-top: 15px;
+            border: 3px solid #4CAF50;
+            backdrop-filter: blur(5px);
+            animation: containerEntrance 0.8s ease-out;
+        }
+
+        /* Заголовок четвертого слайда */
+        .main-title-4 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: titleGlowGreen 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlowGreen {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(76, 175, 80, 0.3); }
+            50% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(76, 175, 80, 0.6), 0 0 30px rgba(76, 175, 80, 0.4); }
+        }
+
+        /* Рамка с загадкой четвертого слайда */
+        .riddle-frame-4 {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border: 2px solid #4CAF50;
+            animation: riddleGlowGreen 3s infinite;
+        }
+
+        @keyframes riddleGlowGreen {
+            0%, 100% { box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); }
+            50% { box-shadow: 0 5px 30px rgba(76, 175, 80, 0.3); }
+        }
+
+        .riddle-text-4 {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 500;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-line;
+        }
+
+        /* Форма ответа с двумя полями для четвертого слайда */
+        .answer-form-4 {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .input-group-4 {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            position: relative;
+        }
+
+        .input-label-4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-input-4 {
+            padding: 12px 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Roboto Slab', serif;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            flex: 1;
+            height: 48px;
+            box-sizing: border-box;
+            animation: inputPulseGreen 2s infinite;
+        }
+
+        @keyframes inputPulseGreen {
+            0%, 100% { border-color: #4CAF50; }
+            50% { border-color: #66BB6A; }
+        }
+
+        .answer-input-4:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            background-color: white;
+            animation: none;
+        }
+
+        /* Кнопки четвертого слайда */
+        .btn-primary-4 {
+            background-color: #4CAF50;
+            color: white;
+            animation: buttonGlowGreen 2s infinite;
+        }
+
+        @keyframes buttonGlowGreen {
+            0%, 100% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
+        }
+
+        .btn-secondary-4 {
+            background-color: rgba(240, 240, 240, 0.9);
+            color: #333;
+            border: 2px solid #4CAF50;
+        }
+
+        /* Таймеры для двух подсказок четвертого слайда */
+        .timers-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .timer-container-4 {
+            padding: 12px;
+            background-color: rgba(76, 175, 80, 0.15);
+            border-radius: 8px;
+            border: 1px solid #4CAF50;
+            backdrop-filter: blur(3px);
+            flex: 1;
+            max-width: 220px;
+            animation: timerPulseGreen 2s infinite;
+        }
+
+        @keyframes timerPulseGreen {
+            0%, 100% { background-color: rgba(76, 175, 80, 0.15); }
+            50% { background-color: rgba(76, 175, 80, 0.25); }
+        }
+
+        .timer-text-4 {
+            font-size: 14px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .timer-4 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2E7D32;
+            font-family: monospace;
+            animation: timerDigit 1s infinite;
+        }
+
+        /* Индикаторы правильности ответов четвертого слайда */
+        .status-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .status-dot.correct {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px #4CAF50;
+            animation: dotPulse 1s infinite;
+        }
+
+        .status-dot.incorrect {
+            background-color: #f44336;
+            animation: dotShake 0.5s;
+        }
+
+        /* Кнопки подсказок четвертого слайда */
+        .hint-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        /* Секретные числа 452 для пасхального яйца */
+        .secret-numbers-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        .secret-number {
+            position: absolute;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 900;
+            opacity: 0.85;
+            user-select: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            z-index: 2;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+            animation: secretFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes secretFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-15px) rotate(5deg); }
+            66% { transform: translateY(15px) rotate(-5deg); }
+        }
+
+        .secret-number:hover {
+            opacity: 1;
+            transform: rotate(5deg) scale(1.1);
+            animation: secretHover 0.5s ease-in-out;
+        }
+
+        @keyframes secretHover {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Секретная кнопка третьего слайда */
+        .secret-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.1;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .secret-button-container:hover {
+            opacity: 0.3;
+        }
+        
+        .secret-button-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .secret-timer {
+            font-family: 'Roboto Slab', serif;
+            font-size: 12px;
+            color: #ff6b6b;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .secret-btn {
+            background: transparent;
+            border: 1px dashed #ff6b6b;
+            color: #ff6b6b;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-family: 'Roboto Slab', serif;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        
+        .secret-btn:hover {
+            opacity: 1;
+        }
+
+        /* Секретная кнопка четвертого слайда */
+        .secret-button-container-4 {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.1;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .secret-button-container-4:hover {
+            opacity: 0.3;
+        }
+        
+        .secret-btn-4 {
+            background: transparent;
+            border: 1px dashed #4CAF50;
+            color: #4CAF50;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-family: 'Roboto Slab', serif;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        
+        .secret-btn-4:hover {
+            opacity: 1;
+        }
+
+        /* Модальные окна (общие) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: #222;
+            color: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-text {
+            font-size: 22px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Модальное окно для первого слайда */
+        .transition-modal .modal-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+
+        .transition-modal .modal-text {
+            color: #8a2be2;
+            font-weight: bold;
+        }
+
+        .transition-btn {
+            background-color: #8a2be2;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 500;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .transition-btn:hover {
+            background-color: #4b0082;
+            transform: translateY(-2px);
+        }
+
+        /* Модальные окна четвертого слайда */
+        .modal-overlay-4 .modal-content {
+            background-color: #222;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .modal-text-4 {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+
+        /* ФИНАЛЬНЫЙ ЭТАП СЛАЙД (Слайд 5) */
+        .slide-5 {
+            background-image: url('https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 30px;
+        }
+
+               /* НОВАЯ АНИМАЦИЯ ГАЛАКТИЧЕСКОГО ПОРТАЛА */
+        .galactic-portal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0;
+            display: none;
+        }
+
+        .galactic-portal.active {
+            display: block;
+            animation: portalAppear 0.8s ease-out forwards;
+        }
+
+        /* Центральное ядро портала */
+        .portal-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(255, 215, 0, 0.9) 0%,
+                rgba(255, 140, 0, 0.8) 30%,
+                rgba(138, 43, 226, 0.7) 60%,
+                rgba(0, 0, 0, 0) 80%
+            );
+            filter: blur(10px);
+            z-index: 100000;
+        }
+
+        /* Вращающиеся кольца портала */
+        .portal-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #FFD700;
+            border-right-color: #FF8C00;
+            border-bottom-color: #8A2BE2;
+            border-left-color: #4B0082;
+            z-index: 99999;
+        }
+
+        .ring-1 {
+            width: 0;
+            height: 0;
+            animation: ringExpand 2s ease-out forwards;
+        }
+
+        .ring-2 {
+            width: 0;
+            height: 0;
+            animation: ringExpand 2s ease-out 0.2s forwards;
+        }
+
+        .ring-3 {
+            width: 0;
+            height: 0;
+            animation: ringExpand 2s ease-out 0.4s forwards;
+        }
+
+        /* Звезды и частицы */
+        .portal-star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            z-index: 100001;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Энергетические вихри */
+        .energy-vortex {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                rgba(255, 215, 0, 0.8),
+                rgba(255, 140, 0, 0.7),
+                rgba(138, 43, 226, 0.6),
+                rgba(75, 0, 130, 0.5),
+                transparent
+            );
+            z-index: 99998;
+            animation: vortexSpin 3s linear infinite;
+        }
+
+        /* Световые лучи */
+        .light-beam {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(to top,
+                transparent,
+                rgba(255, 215, 0, 0.9),
+                rgba(255, 140, 0, 0.8),
+                rgba(138, 43, 226, 0.7)
+            );
+            transform-origin: bottom center;
+            z-index: 100002;
+            border-radius: 50% 50% 0 0;
+        }
+
+        /* Эффект засасывания (пульсация) */
+        .suck-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at center,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(0, 0, 0, 0.9) 30%,
+                rgba(0, 0, 0, 1) 100%
+            );
+            z-index: 99997;
+            animation: suckIn 2.5s ease-out forwards;
+        }
+
+        /* Анимации */
+        @keyframes portalAppear {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes ringExpand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0;
+                border-width: 1px;
+            }
+            50% {
+                opacity: 1;
+                border-width: 3px;
+            }
+            100% {
+                width: 120vmax;
+                height: 120vmax;
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        @keyframes vortexSpin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes suckIn {
+            0% {
+                transform: scale(1);
+                opacity: 0;
+            }
+            30% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes starFloat {
+            0% {
+                transform: translate(var(--startX), var(--startY)) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--endX), var(--endY)) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes beamExpand {
+            0% {
+                height: 0;
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                height: 100vmax;
+                opacity: 0;
+            }
+        }
+
+        /* Затемнение экрана перед переходом */
+        .portal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.7) 30%,
+                rgba(0, 0, 0, 0.9) 100%
+            );
+            z-index: 99996;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .portal-overlay.active {
+            animation: overlayFade 2s ease-out forwards;
+        }
+
+        @keyframes overlayFade {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Основной контейнер для финального этапа */
+        .content-container-5 {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 800px;
+            width: 95%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-top: 15px;
+            border: 3px solid #9C27B0;
+            animation: containerEntrance 0.8s ease-out;
+        }
+
+        /* Заголовок финального этапа */
+        .main-title-5 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            color: #9C27B0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px;
+            line-height: 1.2;
+            animation: titleGlowPurple 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlowPurple {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px rgba(156, 39, 176, 0.3); }
+            50% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(156, 39, 176, 0.6), 0 0 30px rgba(156, 39, 176, 0.4); }
+        }
+
+        /* Основное сообщение финального этапа */
+        .message-box-5 {
+            background-color: rgba(156, 39, 176, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid #9C27B0;
+            text-align: left;
+            animation: messageBoxFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes messageBoxFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .message-text-5 {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        /* Этапы финального этапа */
+        .stage {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .stage.active {
+            display: block;
+        }
+
+        /* Формы и кнопки финального этапа */
+        .input-row-5 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            justify-content: space-between;
+        }
+
+        .input-group-5 {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .input-label-5 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            text-align: left;
+        }
+
+        .input-field-5 {
+            padding: 12px 15px;
+            border: 2px solid #9C27B0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Roboto Slab', serif;
+            background-color: white;
+            transition: all 0.3s ease;
+            flex: 1;
+            height: 48px;
+            box-sizing: border-box;
+            animation: inputPulsePurple 2s infinite;
+        }
+
+        @keyframes inputPulsePurple {
+            0%, 100% { border-color: #9C27B0; }
+            50% { border-color: #BA68C8; }
+        }
+
+        .input-field-5:focus {
+            outline: none;
+            border-color: #7B1FA2;
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+            animation: none;
+        }
+
+        .double-inputs-5 {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .double-inputs-5 .input-field-5 {
+            flex: 1;
+        }
+
+        .btn-5 {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Roboto Slab', serif;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #9C27B0;
+            color: white;
+            animation: buttonGlowPurple 2s infinite;
+        }
+
+        @keyframes buttonGlowPurple {
+            0%, 100% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4); }
+        }
+
+        .btn-5:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background-color: #7B1FA2;
+        }
+
+        .btn-5:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-5:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-success-5 {
+            background-color: #4CAF50;
+        }
+
+        .btn-success-5:hover:not(:disabled) {
+            background-color: #388E3C;
+        }
+
+        /* Парольное поле финального этапа */
+        .password-container-5 {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .password-input-5 {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            border: 3px solid #9C27B0;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+            color: #333;
+            animation: passwordGlow 2s infinite;
+        }
+
+        @keyframes passwordGlow {
+            0%, 100% { border-color: #9C27B0; box-shadow: 0 0 10px rgba(156, 39, 176, 0.3); }
+            50% { border-color: #BA68C8; box-shadow: 0 0 20px rgba(156, 39, 176, 0.6); }
+        }
+
+        /* Статусы финального этапа */
+        .status-indicator-5 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .status-dot-5 {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .status-dot-5.correct {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px #4CAF50;
+            animation: dotPulse 1s infinite;
+        }
+
+        .status-dot-5.incorrect {
+            background-color: #f44336;
+            animation: dotShake 0.5s;
+        }
+
+        /* Финальное сообщение */
+        .final-message-5 {
+            background-color: #333;
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid #9C27B0;
+            animation: fadeIn 0.8s ease;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .final-title-5 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 36px;
+            color: #FFC107;
+            margin-bottom: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: titleAppear 0.8s ease forwards 0.3s;
+        }
+
+        .final-text-5 {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: justify;
+            hyphens: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: textAppear 0.8s ease forwards;
+        }
+
+        .final-text-5:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .final-text-5:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+
+        .final-text-5:nth-child(4) {
+            animation-delay: 1.1s;
+        }
+
+        .final-text-5:nth-child(6) {
+            animation-delay: 1.7s;
+            text-align: center;
+            font-size: 18px;
+            color: #FFC107;
+        }
+
+        .final-password-5 {
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 10px;
+            border: 2px solid #FFC107;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: passwordBoxAppear 0.8s ease forwards 2s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .password-display-5 {
+            font-size: 64px;
+            font-weight: bold;
+            color: #FFC107;
+            text-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+            letter-spacing: 5px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .password-display-5.blurred {
+            filter: blur(15px);
+            transition: filter 0.5s ease;
+        }
+
+        .password-display-5.revealed {
+            filter: blur(0);
+            animation: numberDance 2s ease infinite;
+        }
+
+        .password-display-5.revealed span {
+            display: inline-block;
+            animation: digitFloat 3s ease-in-out infinite;
+        }
+
+        .password-display-5.revealed span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .password-display-5.revealed span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .password-display-5.revealed span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .reveal-hint-5 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFC107;
+            font-size: 14px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .final-password-5:hover .reveal-hint-5 {
+            opacity: 1;
+        }
+
+        ul {
+            color: #FFC107;
+            margin-left: 20px;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: textAppear 0.8s ease forwards 1.4s;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        /* Анимации для финального этапа */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes titleAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes textAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes passwordBoxAppear {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes numberDance {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(-2deg); }
+            75% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        @keyframes digitFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        @keyframes confettiRain {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #FFC107;
+            top: -10px;
+            z-index: 1000;
+            opacity: 0;
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s ease 3;
+        }
+
+        /* Стили для праздничного видео */
+        .celebration-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            border: 5px solid #FFC107;
+            box-shadow: 0 0 50px rgba(255, 193, 7, 0.8);
+        }
+
+        /* Специальные модальные окна для правильных ответов */
+        .success-modal .modal-content {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border: 3px solid #FFC107;
+            animation: successGlow 2s infinite;
+        }
+
+        @keyframes successGlow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+            50% { box-shadow: 0 10px 40px rgba(76, 175, 80, 0.7), 0 0 60px rgba(255, 193, 7, 0.4); }
+        }
+
+        .success-modal .modal-text {
+            color: white;
+            font-size: 24px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .correct-answer {
+            color: #2196F3 !important;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+            animation: answerGlow 1.5s infinite;
+        }
+
+        @keyframes answerGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(33, 150, 243, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(33, 150, 243, 0.8), 0 0 30px rgba(33, 150, 243, 0.4); }
+        }
+
+        /* Адаптивность для 15.6 дюймов */
+        @media (max-width: 1366px) {
+            body {
+                zoom: 0.9;
+            }
+            
+            .content-container,
+            .content-container-2,
+            .content-container-3,
+            .content-container-4,
+            .content-container-5 {
+                max-width: 90%;
+                padding: 20px;
+            }
+            
+            .main-title {
+                font-size: 48px;
+            }
+            
+            .main-title-3 {
+                font-size: 52px;
+            }
+            
+            .main-title-4 {
+                font-size: 40px;
+            }
+            
+            .main-title-5 {
+                font-size: 40px;
+            }
+            
+            .text-content {
+                font-size: 18px;
+            }
+            
+            .riddle-text {
+                font-size: 16px;
+            }
+            
+            .riddle-text-4 {
+                font-size: 16px;
+            }
+            
+            .message-text-5 {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                zoom: 0.8;
+            }
+            
+            .main-title {
+                font-size: 40px;
+            }
+            
+            .main-title-3 {
+                font-size: 44px;
+            }
+            
+            .main-title-4 {
+                font-size: 36px;
+            }
+            
+            .main-title-5 {
+                font-size: 36px;
+            }
+            
+            .text-block {
+                padding: 20px;
+                min-height: 200px;
+            }
+            
+            .text-content {
+                font-size: 16px;
+            }
+            
+            .runaway-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+            
+            .big-btn {
+                padding: 18px 35px;
+                font-size: 18px;
+                width: 90%;
+            }
+            
+            .content-container-2,
+            .content-container-3,
+            .content-container-4,
+            .content-container-5 {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .riddle-text {
+                font-size: 15px;
+            }
+            
+            .riddle-text-4 {
+                font-size: 14px;
+            }
+            
+            .answer-input,
+            .answer-input-3,
+            .answer-input-4,
+            .input-field-5 {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .btn-5 {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .buttons-row {
+                flex-direction: column;
+            }
+            
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .input-row-5 {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .double-inputs-5 {
+                flex-direction: column;
+            }
+            
+            .timers-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .timer-container-4 {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .status-indicators {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .hint-buttons {
+                flex-direction: column;
+            }
+            
+            .password-input-5 {
+                font-size: 24px;
+                width: 160px;
+                padding: 15px;
+            }
+            
+            .password-display-5 {
+                font-size: 48px;
+            }
+            
+            .secret-number {
+                font-size: 35px !important;
+            }
+            
+            .final-message-5 {
+                padding: 20px;
+            }
+            
+            .final-title-5 {
+                font-size: 30px;
+            }
+            
+            .final-text-5 {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                zoom: 0.7;
+            }
+            
+            .main-title {
+                font-size: 36px;
+            }
+            
+            .main-title-3 {
+                font-size: 40px;
+            }
+            
+            .main-title-4 {
+                font-size: 32px;
+            }
+            
+            .main-title-5 {
+                font-size: 32px;
+            }
+            
+            .text-content {
+                font-size: 14px;
+            }
+            
+            .riddle-text {
+                font-size: 14px;
+            }
+            
+            .riddle-text-4 {
+                font-size: 13px;
+            }
+            
+            .password-display-5 {
+                font-size: 40px;
+            }
+            
+            .secret-number {
+                font-size: 30px !important;
+            }
+        }
+
+        /* Улучшенные анимации для всего сайта */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shimmer-effect {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+    </style>
+</head>
+<body>
+        <!-- НОВАЯ АНИМАЦИЯ ГАЛАКТИЧЕСКОГО ПОРТАЛА -->
+    <div class="galactic-portal" id="galactic-portal">
+        <div class="suck-effect"></div>
+        <div class="portal-overlay"></div>
+        <div class="energy-vortex" id="energy-vortex"></div>
+        <div class="portal-core" id="portal-core"></div>
+        <div class="portal-ring ring-1"></div>
+        <div class="portal-ring ring-2"></div>
+        <div class="portal-ring ring-3"></div>
+        <!-- Звезды и лучи будут создаваться динамически -->
+    </div>
+
+    <!-- Слайд 1 -->
+    <div class="slide slide-1 active" id="slide-1">
+        <!-- Декоративные числа 25 -->
+        <div class="numbers-container" id="numbers-container"></div>
+        
+        <!-- Контейнер контента -->
+        <div class="content-container">
+            <h1 class="main-title">Приветствую, Екатерина!</h1>
+            
+            <div class="text-block">
+                <div class="text-content" id="text-content"></div>
+            </div>
+            
+            <div class="buttons-container">
+                <button class="runaway-btn" id="runaway-btn">пошли вы нахуй</button>
+                <div class="timer-message" id="timer-message"></div>
+                <button class="big-btn" id="big-btn">Погнали разгадать!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 2 -->
+    <div class="slide slide-2" id="slide-2">
+        <!-- Декоративные изображения Екатерины -->
+        <div class="images-container" id="images-container-2"></div>
+        
+        <!-- Декоративные числа 1-9 -->
+        <div class="numbers-container-2" id="numbers-container-2"></div>
+        
+        <!-- Модальные окна для второго слайда -->
+        <div class="modal-overlay" id="hint-modal">
+            <div class="modal-content">
+                <p class="modal-text">Подсказка: «Я тяну все к себе, луну к земле, воду к луне»</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="closeModal('hint-modal')">Понятно</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay success-modal" id="correct-modal">
+            <div class="modal-content">
+                <p class="modal-text">Правильно! Ответ "<span class="correct-answer">гравитация</span>" принят! Пораньше ты придешь к ответу, подкинь 5 раз 2х рублевую монету</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="goToSlide(3)">Гоните следующую вопрос!</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay success-modal" id="attraction-modal">
+            <div class="modal-content">
+                <p class="modal-text">Правильный ответ "<span class="correct-answer">гравитация</span>", но "<span class="correct-answer">притяжение</span>" тоже учитывается. Принимаем!</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="closeModal('attraction-modal'); setTimeout(() => openModal('correct-modal'), 300);">Отлично!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контейнер контента -->
+        <div class="content-container-2">
+            <h1 class="main-title">Загадка первая</h1>
+            
+            <div class="riddle-frame">
+                <div class="riddle-text">Я не касаюсь, но держу,
+Но выборов не разрешу.
+Стоит ли Катя, идёт ли прочь —
+Я одинаков днём и в ночь.</div>
+            </div>
+            
+            <div class="answer-form">
+                <div class="input-group">
+                    <label class="input-label" for="answer">
+                        Введите ваш ответ:
+                        <span class="answer-indicator" id="answer-indicator-2">
+                            <span class="indicator-dot" id="indicator-dot-2"></span>
+                            <span id="indicator-text-2"></span>
+                        </span>
+                    </label>
+                    <input type="text" id="answer" class="answer-input" placeholder="Ваш ответ...">
+                </div>
+                
+                <div class="buttons-row">
+                    <button class="btn btn-primary" id="submit-btn" onclick="checkAnswerSlide2()">Ответить</button>
+                    <button class="btn btn-secondary" id="hint-btn" disabled onclick="showHintSlide2()">я не тупая, но хочу подсказку</button>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                <div class="timer-text">Подсказка станет доступна через:</div>
+                <div class="timer" id="timer-2">05:00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 3 -->
+    <div class="slide slide-3" id="slide-3">
+        <!-- Декоративные изображения Екатерины -->
+        <div class="images-container" id="images-container-3"></div>
+        
+        <!-- Декоративные числа 1-9 -->
+        <div class="numbers-container-2" id="numbers-container-3"></div>
+        
+        <!-- Модальные окна для третьего слайда -->
+        <div class="modal-overlay" id="hint-modal-3">
+            <div class="modal-content">
+                <p class="modal-text">Подсказка: «Это то, что приходит в голову и меняет всё и эта не мысль))»</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="closeModal('hint-modal-3')">Понятно</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay success-modal" id="correct-modal-3">
+            <div class="modal-content">
+                <p class="modal-text">Правильно! Ответ "<span class="correct-answer">идея</span>" принят! Пораньше ты придешь к ответу, подкинь 2 раза рублевую монету</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="goToSlide(4)">Дальше ёпта!</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay" id="close-modal-3">
+            <div class="modal-content">
+                <p class="modal-text">Близко, Катя, но нет. Это не "мысль". Попробуй еще раз!</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="closeModal('close-modal-3')">Попробовать снова</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контейнер контента -->
+        <div class="content-container-3">
+            <h1 class="main-title-3">Загадка вторая</h1>
+            
+            <div class="riddle-frame-3">
+                <div class="riddle-text">Я не рождаюсь на бумаге,
+Но сдвигаю берега.
+Я не живу в твоей отваге,
+Но без меня — ни шага.
+Катя слышит тишину,
+Где я возник без приглашенья,
+Я вспыхну — и изменю
+И путь, и смысл, и направленье.</div>
+            </div>
+            
+            <div class="answer-form">
+                <div class="input-group">
+                    <label class="input-label" for="answer-3">
+                        Введите ваш ответ:
+                        <span class="answer-indicator" id="answer-indicator-3">
+                            <span class="indicator-dot" id="indicator-dot-3"></span>
+                            <span id="indicator-text-3"></span>
+                        </span>
+                    </label>
+                    <input type="text" id="answer-3" class="answer-input-3" placeholder="Ваш ответ...">
+                </div>
+                
+                <div class="buttons-row">
+                    <button class="btn btn-primary-3" id="submit-btn-3" onclick="checkAnswerSlide3()">Ответить</button>
+                    <button class="btn btn-secondary-3" id="hint-btn-3" disabled onclick="showHintSlide3()">я не тупая, но хочу подсказку</button>
+                </div>
+            </div>
+            
+            <div class="timer-container-3">
+                <div class="timer-text-3">Подсказка станет доступна через:</div>
+                <div class="timer-3" id="timer-3">05:00</div>
+            </div>
+        </div>
+        
+        <!-- Невидимая кнопка для невнимательных -->
+        <div class="secret-button-container" id="secret-button-container-3">
+            <div class="secret-button-inner">
+                <div class="secret-timer" id="secret-timer-3">00:00</div>
+                <button class="secret-btn" id="secret-btn-3" onclick="showSecretMessageSlide3()">сюда нажимают только невнимательные</button>
+            </div>
+        </div>
+        
+        <!-- Модальное окно для секретного сообщения -->
+        <div class="modal-overlay" id="secret-modal-3">
+            <div class="modal-content" style="background-color: #111; border: 2px solid #ff6b6b;">
+                <p class="modal-text">Ты будешь ближе к ответу, если 5 раз подкинуть 2х рублевую монету</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="closeModal('secret-modal-3')">Понятно</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 4 -->
+    <div class="slide slide-4" id="slide-4">
+        <!-- Декоративные изображения Екатерины -->
+        <div class="images-container" id="images-container-4"></div>
+        
+        <!-- Декоративные числа 1-9 -->
+        <div class="numbers-container-2" id="numbers-container-4"></div>
+        
+        <!-- Секретные числа 452 для пасхального яйца -->
+        <div class="secret-numbers-container" id="secret-numbers-452">
+            <div class="secret-number" data-value="4" style="left: 20%; top: 40%; font-size: 45px; color: #4CAF50; transform: rotate(-15deg); opacity: 0.85;">4</div>
+            <div class="secret-number" data-value="5" style="left: 25%; top: 42%; font-size: 52px; color: #2196F3; transform: rotate(10deg); opacity: 0.8;">5</div>
+            <div class="secret-number" data-value="2" style="left: 30%; top: 38%; font-size: 48px; color: #FF9800; transform: rotate(-5deg); opacity: 0.9;">2</div>
+        </div>
+        
+        <!-- Модальные окна для четвертого слайда -->
+        <div class="modal-overlay modal-overlay-4" id="hint1-modal-4">
+            <div class="modal-content">
+                <p class="modal-text-4">Подсказка 1: «И в конце и в начале — друг другу равны, Аж три раза — друг другу родны.»</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="closeModal('hint1-modal-4')">Понятно</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay modal-overlay-4" id="hint2-modal-4">
+            <div class="modal-content">
+                <p class="modal-text-4">Подсказка 2: «Кто я "такой", что не нравлюсь себе, Хотя я такой же «другой», но только в душе?»</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="closeModal('hint2-modal-4')">Понятно</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay success-modal modal-overlay-4" id="correct-modal-4">
+            <div class="modal-content">
+                <p class="modal-text-4">Правильно, Катя! Оба ответа верны! "<span class="correct-answer">такой</span>" - это бедный, а "<span class="correct-answer">другой</span>" - это богатый.</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="goToSlide(5)">Ебаните next вопрос!</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay modal-overlay-4" id="partial-modal-4">
+            <div class="modal-content">
+                <p class="modal-text-4">Один из ответов верный, но нужны оба! Проверь еще раз, Катенька.</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="closeModal('partial-modal-4')">Попробовать снова</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay modal-overlay-4" id="secret-modal-4">
+            <div class="modal-content" style="background-color: #111; border: 2px solid #4CAF50;">
+                <p class="modal-text-4">Ты будешь ближе к ответу, если 5 раз подкинуть 2х рублевую монету</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="closeModal('secret-modal-4')">Понятно</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Модальные окна для пасхального яйца -->
+        <div class="modal-overlay modal-overlay-4" id="easter-egg-modal">
+            <div class="modal-content" style="background-color: #111; border: 2px solid #FFD700;">
+                <p class="modal-text-4">Введите пароль от ключа (3 цифры):</p>
+                <input type="text" id="easter-password" class="answer-input-4" placeholder="___" maxlength="3" style="text-align: center; font-size: 24px; letter-spacing: 10px; margin: 20px 0;">
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="checkEasterPassword()">Проверить</button>
+                    <button class="btn btn-secondary-4" onclick="closeModal('easter-egg-modal')">Отмена</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay modal-overlay-4" id="easter-success-modal">
+            <div class="modal-content" style="background-color: #111; border: 2px solid #4CAF50;">
+                <p class="modal-text-4" style="color: #FFD700; font-size: 20px;">Поздравляю! Ты нашла пасхалку и отгадала код пораньше, чем мы рассчитывали!</p>
+                <div class="modal-buttons" style="flex-direction: column; gap: 10px;">
+                    <button class="btn btn-primary-4" onclick="easterContinue()" style="width: 100%;">Все равно продолжить</button>
+                    <button class="btn btn-secondary-4" onclick="easterFinish()" style="width: 100%; background-color: #FFD700; color: #333;">Ура!</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay modal-overlay-4" id="easter-finish-modal">
+            <div class="modal-content" style="background-color: #111; border: 2px solid #FFD700;">
+                <p class="modal-text-4" style="color: #FFD700; font-size: 22px;">Пока пока, Катя, поздравляю еще раз!</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary-4" onclick="closeAllModals()">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контейнер контента -->
+        <div class="content-container-4">
+            <h1 class="main-title-4">Загадка третья</h1>
+            
+            <div class="riddle-frame-4">
+                <div class="riddle-text-4">Каждый «такой» хочет «другого»,
+Но каждый «другой» не хочет иного.
+«Другой» — человек, так же «такой»,
+Тоже живой, но очень простой.</div>
+            </div>
+            
+            <div class="answer-form-4">
+                <!-- Первый вопрос -->
+                <div class="input-row">
+                    <div class="input-group-4">
+                        <label class="input-label-4" for="answer1-4">
+                            Кто я "такой"?
+                            <span class="answer-indicator" id="answer-indicator-4-1">
+                                <span class="indicator-dot" id="indicator-dot-4-1"></span>
+                                <span id="indicator-text-4-1"></span>
+                            </span>
+                        </label>
+                        <input type="text" id="answer1-4" class="answer-input-4" placeholder="Ваш ответ...">
+                    </div>
+                    <button class="btn btn-primary-4" onclick="checkAnswer1Slide4()">Ответить</button>
+                </div>
+                
+                <!-- Второй вопрос -->
+                <div class="input-row">
+                    <div class="input-group-4">
+                        <label class="input-label-4" for="answer2-4">
+                            Кто же "другой"?
+                            <span class="answer-indicator" id="answer-indicator-4-2">
+                                <span class="indicator-dot" id="indicator-dot-4-2"></span>
+                                <span id="indicator-text-4-2"></span>
+                            </span>
+                        </label>
+                        <input type="text" id="answer2-4" class="answer-input-4" placeholder="Ваш ответ...">
+                    </div>
+                    <button class="btn btn-primary-4" onclick="checkAnswer2Slide4()">Ответить</button>
+                </div>
+                
+                <!-- Индикаторы правильности -->
+                <div class="status-indicators">
+                    <div class="status-indicator">
+                        <div class="status-dot" id="status1-4"></div>
+                        <span>Ответ 1: <span id="status-text1-4">Не проверен</span></span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="status2-4"></div>
+                        <span>Ответ 2: <span id="status-text2-4">Не проверен</span></span>
+                    </div>
+                </div>
+                
+                <!-- Кнопки подсказок -->
+                <div class="hint-buttons">
+                    <button class="btn btn-secondary-4" id="hint1-btn-4" disabled onclick="showHint1Slide4()">Для "не тупых"</button>
+                    <button class="btn btn-secondary-4" id="hint2-btn-4" disabled onclick="showHint2Slide4()">Вообще "не тупая"</button>
+                </div>
+            </div>
+            
+            <div class="timers-container">
+                <div class="timer-container-4">
+                    <div class="timer-text-4">Подсказка 1 станет доступна через:</div>
+                    <div class="timer-4" id="timer1-4">02:00</div>
+                </div>
+                
+                <div class="timer-container-4">
+                    <div class="timer-text-4">Подсказка 2 станет доступна через:</div>
+                    <div class="timer-4" id="timer2-4">05:00</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Невидимая кнопка для невнимательных -->
+        <div class="secret-button-container-4" id="secret-button-container-4">
+            <div class="secret-button-inner">
+                <div class="secret-timer" id="secret-timer-4">00:00</div>
+                <button class="secret-btn-4" id="secret-btn-4" onclick="showSecretMessageSlide4()">сюда нажимают только невнимательные</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Слайд 5: Финальный этап -->
+    <div class="slide slide-5" id="slide-5">
+        <!-- Контейнер контента -->
+        <div class="content-container-5">
+            <h1 class="main-title-5">Финальный этап</h1>
+            
+            <!-- Этап 1: Вступительное сообщение -->
+            <div class="stage active" id="stage1">
+                <div class="message-box-5">
+                    <p class="message-text-5">
+                        Катя, раз уж ты добралась до этого места, но так и не разгадала пароль от замка — значит, подсказки остались незамеченными. Видимо, нам, «ведь мы же тупые», снова придётся прийти тебе на помощь 😊
+                    </p>
+                    <p class="message-text-5">
+                        Для начала давай убедимся, что ты помнишь свои собственные ответы на вопросы.
+                    </p>
+                </div>
+                
+                <div class="input-row-5">
+                    <div class="input-group-5">
+                        <label class="input-label-5" for="answer1">Ответ на первый вопрос:</label>
+                        <input type="text" id="answer1" class="input-field-5" placeholder="Ваш ответ...">
+                    </div>
+                    <button class="btn-5" onclick="checkAnswer1()">Проверить</button>
+                </div>
+                <div class="status-indicator-5" id="status1">
+                    <div class="status-dot-5"></div>
+                    <span id="status-text1">Не проверено</span>
+                </div>
+                
+                <div class="input-row-5">
+                    <div class="input-group-5">
+                        <label class="input-label-5" for="answer2">Ответ на второй вопрос:</label>
+                        <input type="text" id="answer2" class="input-field-5" placeholder="Ваш ответ...">
+                    </div>
+                    <button class="btn-5" onclick="checkAnswer2()">Проверить</button>
+                </div>
+                <div class="status-indicator-5" id="status2">
+                    <div class="status-dot-5"></div>
+                    <span id="status-text2">Не проверено</span>
+                </div>
+                
+                <div class="input-row-5">
+                    <div class="input-group-5">
+                        <label class="input-label-5">Ответ на третий вопрос:</label>
+                        <div class="double-inputs-5">
+                            <input type="text" id="answer3a" class="input-field-5" placeholder="Первое слово...">
+                            <input type="text" id="answer3b" class="input-field-5" placeholder="Второе слово...">
+                        </div>
+                    </div>
+                    <button class="btn-5" onclick="checkAnswer3()">Проверить</button>
+                </div>
+                <div class="status-indicator-5" id="status3">
+                    <div class="status-dot-5"></div>
+                    <span id="status-text3">Не проверено</span>
+                </div>
+                
+                <button class="btn-5 btn-success-5" id="next-stage1" onclick="goToStage2()" style="margin-top: 20px; display: none;">
+                    Далее
+                </button>
+            </div>
+            
+            <!-- Этап 2: Дата рождения -->
+            <div class="stage" id="stage2">
+                <div class="message-box-5">
+                    <p class="message-text-5">
+                        Катя, твоя дата рождения — не простое число, оно тоже имеет значение. 
+                        Впиши его в 3-значном виде, а как догадайся сама, подсказок было достаточно)).
+                    </p>
+                    <p class="message-text-5">
+                        Убедимся, знаешь ли, когда ты родилась)
+                    </p>
+                </div>
+                
+                <div class="input-row-5">
+                    <div class="input-group-5">
+                        <label class="input-label-5" for="birthday">Дата рождения (3 цифры):</label>
+                        <input type="text" id="birthday" class="input-field-5" placeholder="XXX" maxlength="3">
+                    </div>
+                    <button class="btn-5" onclick="checkBirthday()">Ответить</button>
+                </div>
+                <div class="status-indicator-5" id="status-birthday">
+                    <div class="status-dot-5"></div>
+                    <span id="status-text-birthday">Не проверено</span>
+                </div>
+                
+                <button class="btn-5 btn-success-5" id="next-stage2" onclick="goToStage3()" style="margin-top: 20px; display: none;">
+                    Далее
+                </button>
+            </div>
+            
+            <!-- Этап 3: Буквы из ответов -->
+            <div class="stage" id="stage3">
+                <div class="message-box-5">
+                    <p class="message-text-5">
+                        Код 121 — это ещё не сам пароль, а подсказка: он указывает на номера букв в тех словах, которые ты уже отгадала. 
+                        Выпиши эти буквы в правильном порядке. Получится ключ!
+                    </p>
+                </div>
+                
+                <div class="input-row-5">
+                    <div class="input-group-5">
+                        <label class="input-label-5" for="letters">Буквы (3 буквы):</label>
+                        <input type="text" id="letters" class="input-field-5" placeholder="XXX" maxlength="3">
+                    </div>
+                    <button class="btn-5" onclick="checkLetters()">Проверить</button>
+                </div>
+                <div class="status-indicator-5" id="status-letters">
+                    <div class="status-dot-5"></div>
+                    <span id="status-text-letters">Не проверено</span>
+                </div>
+                
+                <button class="btn-5 btn-success-5" id="next-stage3" onclick="goToStage4()" style="margin-top: 20px; display: none;">
+                    Далее
+                </button>
+            </div>
+            
+            <!-- Этап 4: Финальный пароль -->
+            <div class="stage" id="stage4">
+                <div class="message-box-5">
+                    <p class="message-text-5">
+                        Последний шаг — и ты уже почти у цели! Тебе нужно присвоить этим буквам достойную 3-значное число. 
+                    </p>
+                    <p class="message-text-5">
+                        Уверена, ты справишься! 💫Введи пароль из 3 цифр:
+                    </p>
+                </div>
+                
+                <div class="password-container-5">
+                    <input type="text" id="final-password" class="password-input-5" placeholder="___" maxlength="3" oninput="formatPassword()">
+                    <button class="btn-5 btn-success-5" onclick="checkFinalPassword()" style="margin-top: 20px;">
+                        Проверить пароль
+                    </button>
+                </div>
+                <div class="status-indicator-5" id="status-final">
+                    <div class="status-dot-5"></div>
+                    <span id="status-text-final">Не проверено</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно перехода с первого слайда -->
+    <div class="modal-overlay transition-modal" id="transition-modal">
+        <div class="modal-content">
+            <p class="modal-text">Пораньше ты придешь к ответу, но 4 раза подкинь рублевую монету</p>
+            <div class="modal-buttons">
+                <button class="transition-btn" id="transition-ok-btn">Хорошо</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Глобальные переменные для управления слайдами
+        let currentSlide = 1;
+        
+        // Глобальные переменные для счетчика кликов 452 и видео
+        let clickCount452 = 0;
+        let clickTimer452 = null;
+        let videoElement = null;
+        
+        // Функция для переключения слайдов
+        function goToSlide(slideNumber) {
+            // Скрываем все слайды
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Показываем нужный слайд
+            document.getElementById(`slide-${slideNumber}`).classList.add('active');
+            currentSlide = slideNumber;
+            
+            // Инициализация элементов слайда при переходе
+            if (slideNumber === 1) {
+                initNumbersSlide1();
+            } else if (slideNumber === 2) {
+                initSlide2();
+            } else if (slideNumber === 3) {
+                initSlide3();
+            } else if (slideNumber === 4) {
+                initSlide4();
+            } else if (slideNumber === 5) {
+                initSlide5();
+            }
+        }
+        
+        // Код для первого слайда
+        let buttonCaught = false;
+        let buttonClicked = false;
+        let timeLeft = 25;
+        let timerInterval = null;
+        let isMoving = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let lastMoveTime = 0;
+        let moveCooldown = false;
+        let buttonWidth = 0;
+        let buttonHeight = 0;
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Показываем первый слайд
+            goToSlide(1);
+            
+            // Инициализируем элементы первого слайда
+            initNumbersSlide1();
+            startTypingWelcomeText();
+            
+            // Настраиваем модальное окно перехода
+            setupTransitionModal();
+        });
+        
+        // Инициализация декоративных чисел для первого слайда - анимированный дождь
+        function initNumbersSlide1() {
+            const container = document.getElementById('numbers-container');
+            const count = 100;
+            
+            for (let i = 0; i < count; i++) {
+                const number = document.createElement('div');
+                number.className = 'number-25';
+                number.textContent = '25';
+                
+                const left = Math.random() * 100;
+                const top = -50;
+                const size = 14 + Math.random() * 22;
+                const colors = ['#8a2be2', '#0000ff', '#ff0000', '#008000', '#ff8c00'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                number.style.left = `${left}%`;
+                number.style.top = `${top}px`;
+                number.style.fontSize = `${size}px`;
+                number.style.color = color;
+                
+                // Случайная задержка анимации
+                const delay = Math.random() * 15;
+                const duration = 10 + Math.random() * 10;
+                number.style.animationDelay = `${delay}s`;
+                number.style.animationDuration = `${duration}s`;
+                
+                // Дополнительная анимация танца
+                number.style.animation += `, numberDance ${3 + Math.random() * 2}s ease-in-out infinite`;
+
+                container.appendChild(number);
+            }
+        }
+        
+        // Печать приветственного текста
+        function startTypingWelcomeText() {
+            const textContent = document.getElementById('text-content');
+            const welcomeText = `Думала, что так легко отделалась? 😄
+Мы решили немного поиграть.
+Мы знаем, у тебя щас дикое желание нас послать, мы не против, пошли…
+тебе исполнилось 25 лет и мы тебе даем 25 секунд, чтобы нас послать)`;
+            
+            let i = 0;
+            const speed = 20;
+            
+            function typeWriter() {
+                if (i < welcomeText.length) {
+                    textContent.textContent += welcomeText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    const cursor = document.createElement('span');
+                    cursor.className = 'typing-cursor';
+                    textContent.appendChild(cursor);
+                    
+                    setTimeout(() => {
+                        textContent.removeChild(cursor);
+                        setupRunawayButton();
+                    }, 500);
+                }
+            }
+            
+            typeWriter();
+        }
+        
+        // Настройка убегающей кнопки
+        function setupRunawayButton() {
+            const button = document.getElementById('runaway-btn');
+            buttonWidth = button.offsetWidth;
+            buttonHeight = button.offsetHeight;
+            
+            button.style.display = 'block';
+            startEscapeTimer();
+            startAggressiveRunningAway();
+        }
+        
+        // Функция для ограничения позиции в пределах экрана
+        function clampPosition(x, y, btnWidth, btnHeight) {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const margin = 20;
+            
+            const minX = margin + btnWidth / 2;
+            const maxX = screenWidth - margin - btnWidth / 2;
+            const minY = margin + btnHeight / 2;
+            const maxY = screenHeight - margin - btnHeight / 2;
+            
+            return {
+                x: Math.max(minX, Math.min(maxX, x)),
+                y: Math.max(minY, Math.min(maxY, y))
+            };
+        }
+        
+        // Функция активного убегания кнопки
+        function startAggressiveRunningAway() {
+            const button = document.getElementById('runaway-btn');
+            
+            document.addEventListener('mousemove', handleAggressiveMouseMove);
+            document.addEventListener('touchmove', handleAggressiveTouchMove, { passive: false });
+            
+            function handleAggressiveMouseMove(e) {
+                if (buttonCaught || buttonClicked || moveCooldown) return;
+                
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                const currentTime = Date.now();
+                
+                const distanceFromLast = Math.sqrt(
+                    Math.pow(mouseX - lastMouseX, 2) + 
+                    Math.pow(mouseY - lastMouseY, 2)
+                );
+                const timeDiff = currentTime - lastMoveTime;
+                
+                if (timeDiff > 20 || distanceFromLast > 3) {
+                    aggressiveMoveButton(mouseX, mouseY);
+                    lastMouseX = mouseX;
+                    lastMouseY = mouseY;
+                    lastMoveTime = currentTime;
+                }
+            }
+            
+            function handleAggressiveTouchMove(e) {
+                if (buttonCaught || buttonClicked || moveCooldown) return;
+                
+                e.preventDefault();
+                const touchX = e.touches[0].clientX;
+                const touchY = e.touches[0].clientY;
+                aggressiveMoveButton(touchX, touchY);
+            }
+            
+            function aggressiveMoveButton(cursorX, cursorY) {
+                if (isMoving) return;
+                
+                isMoving = true;
+                
+                const buttonRect = button.getBoundingClientRect();
+                const buttonCenterX = buttonRect.left + buttonWidth / 2;
+                const buttonCenterY = buttonRect.top + buttonHeight / 2;
+                
+                const distance = Math.sqrt(
+                    Math.pow(cursorX - buttonCenterX, 2) + 
+                    Math.pow(cursorY - buttonCenterY, 2)
+                );
+                
+                if (distance < 350) {
+                    const screenWidth = window.innerWidth;
+                    const screenHeight = window.innerHeight;
+                    const margin = 50;
+                    
+                    const isNearLeftEdge = buttonCenterX < margin + buttonWidth;
+                    const isNearRightEdge = buttonCenterX > screenWidth - margin - buttonWidth;
+                    const isNearTopEdge = buttonCenterY < margin + buttonHeight;
+                    const isNearBottomEdge = buttonCenterY > screenHeight - margin - buttonHeight;
+                    
+                    let moveX, moveY;
+                    
+                    if (isNearLeftEdge || isNearRightEdge || isNearTopEdge || isNearBottomEdge) {
+                        const escapeX = isNearLeftEdge ? 1 : (isNearRightEdge ? -1 : (Math.random() > 0.5 ? 1 : -1));
+                        const escapeY = isNearTopEdge ? 1 : (isNearBottomEdge ? -1 : (Math.random() > 0.5 ? 1 : -1));
+                        
+                        moveX = escapeX * (180 + Math.random() * 120);
+                        moveY = escapeY * (180 + Math.random() * 120);
+                    } else {
+                        const dx = buttonCenterX - cursorX;
+                        const dy = buttonCenterY - cursorY;
+                        const length = Math.sqrt(dx * dx + dy * dy);
+                        const normX = dx / length;
+                        const normY = dy / length;
+                        
+                        moveX = normX * (450 + Math.random() * 200);
+                        moveY = normY * (450 + Math.random() * 200);
+                    }
+                    
+                    let newX = buttonCenterX + moveX;
+                    let newY = buttonCenterY + moveY;
+                    
+                    const clampedPos = clampPosition(newX, newY, buttonWidth, buttonHeight);
+                    newX = clampedPos.x;
+                    newY = clampedPos.y;
+                    
+                    const percentX = (newX / screenWidth) * 100;
+                    const percentY = (newY / screenHeight) * 100;
+                    
+                    button.style.transition = 'all 0.08s ease-out';
+                    button.style.left = `${percentX}%`;
+                    button.style.top = `${percentY}%`;
+                    button.style.transform = `translate(-50%, -50%)`;
+                    
+                    moveCooldown = true;
+                    setTimeout(() => {
+                        moveCooldown = false;
+                    }, 30);
+                    
+                    setTimeout(() => {
+                        isMoving = false;
+                    }, 250);
+                } else {
+                    isMoving = false;
+                }
+            }
+            
+            button.addEventListener('mouseenter', function() {
+                if (buttonCaught || buttonClicked || isMoving || moveCooldown) return;
+                
+                const buttonRect = button.getBoundingClientRect();
+                const buttonCenterX = buttonRect.left + buttonWidth / 2;
+                const buttonCenterY = buttonRect.top + buttonHeight / 2;
+                
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const margin = 50;
+                
+                const isNearLeftEdge = buttonCenterX < margin + buttonWidth;
+                const isNearRightEdge = buttonCenterX > screenWidth - margin - buttonWidth;
+                const isNearTopEdge = buttonCenterY < margin + buttonHeight;
+                const isNearBottomEdge = buttonCenterY > screenHeight - margin - buttonHeight;
+                
+                let moveX, moveY;
+                
+                if (isNearLeftEdge || isNearRightEdge || isNearTopEdge || isNearBottomEdge) {
+                    const escapeX = isNearLeftEdge ? 1 : (isNearRightEdge ? -1 : (Math.random() > 0.5 ? 1 : -1));
+                    const escapeY = isNearTopEdge ? 1 : (isNearBottomEdge ? -1 : (Math.random() > 0.5 ? 1 : -1));
+                    
+                    moveX = escapeX * (350 + Math.random() * 250);
+                    moveY = escapeY * (350 + Math.random() * 250);
+                } else {
+                    const angle = Math.random() * Math.PI * 2;
+                    const force = 200;
+                    moveX = Math.cos(angle) * force;
+                    moveY = Math.sin(angle) * force;
+                }
+                
+                let newX = buttonCenterX + moveX;
+                let newY = buttonCenterY + moveY;
+                
+                const clampedPos = clampPosition(newX, newY, buttonWidth, buttonHeight);
+                newX = clampedPos.x;
+                newY = clampedPos.y;
+                
+                const percentX = (newX / screenWidth) * 100;
+                const percentY = (newY / screenHeight) * 100;
+                
+                button.style.transition = 'all 0.2s ease-out';
+                button.style.left = `${percentX}%`;
+                button.style.top = `${percentY}%`;
+                button.style.transform = `translate(-50%, -50%)`;
+            });
+            
+            window.aggressiveRunawayHandlers = {
+                mouse: handleAggressiveMouseMove,
+                touch: handleAggressiveTouchMove,
+                enter: function() {}
+            };
+        }
+        
+        // Таймер для возврата кнопки
+        function startEscapeTimer() {
+            const button = document.getElementById('runaway-btn');
+            const timerMessage = document.getElementById('timer-message');
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    timerMessage.textContent = `Кнопка устанет убегать через: ${timeLeft} сек`;
+                    timerMessage.classList.add('show');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    
+                    if (window.aggressiveRunawayHandlers) {
+                        document.removeEventListener('mousemove', window.aggressiveRunawayHandlers.mouse);
+                        document.removeEventListener('touchmove', window.aggressiveRunawayHandlers.touch);
+                        const button = document.getElementById('runaway-btn');
+                        button.removeEventListener('mouseenter', window.aggressiveRunawayHandlers.enter);
+                    }
+                    
+                    button.style.transition = 'all 2s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+                    button.style.left = '50%';
+                    button.style.top = '50%';
+                    
+                    timerMessage.textContent = 'ладно тыкай уже';
+                    timerMessage.classList.add('show');
+                    
+                    buttonCaught = true;
+                    button.classList.add('caught');
+                    button.addEventListener('click', handleButtonClick);
+                    
+                    setTimeout(() => {
+                        timerMessage.classList.remove('show');
+                    }, 5000);
+                }
+            }, 1000);
+        }
+        
+        // Обработчик клика по кнопке
+        function handleButtonClick() {
+            if (buttonClicked) return;
+            
+            buttonClicked = true;
+            const button = document.getElementById('runaway-btn');
+            const textContent = document.getElementById('text-content');
+            const bigButton = document.getElementById('big-btn');
+            const timerMessage = document.getElementById('timer-message');
+            
+            timerMessage.classList.remove('show');
+            
+            button.style.opacity = '0';
+            button.style.transform = 'translate(-50%, -50%) scale(0.5)';
+            setTimeout(() => {
+                button.style.display = 'none';
+            }, 500);
+            
+            const continuationText = `Без нашей помощи, даже нахуй послать ты нас не смогла, но умничка, почти поймала, эта была небольшая тренировка)
+Мы решили подготовить для тебя небольшой подарок — в день, когда ты совсем не ждёшь сюрприза. Ведь приятные впечатления не должны быть привязаны к какому-то конкретному дню — их можно дарить всегда! 
+Мы очень хотим вручить тебе этот подарок, но, к нашему сожалению, не смогли понять, что внутри, потому что не сумели разгадать пароль от замка — ну, мы же немного тупые 😅
+Поэтому оставляем тебе бокс с подарком и с надеждой, что именно ты сможешь открыть его, разгадать ключ и получить удовольствие, как от процесса, так и от сюрприза!`;
+            
+            textContent.textContent = '';
+            
+            let i = 0;
+            const speed = 20;
+            
+            function typeWriter() {
+                if (i < continuationText.length) {
+                    textContent.textContent += continuationText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    setTimeout(() => {
+                        bigButton.style.display = 'block';
+                        bigButton.style.animation = 'fadeIn 0.8s ease forwards';
+                    }, 800);
+                }
+            }
+            
+            typeWriter();
+            button.removeEventListener('click', handleButtonClick);
+        }
+        
+        // Настройка модального окна перехода
+        function setupTransitionModal() {
+            const bigButton = document.getElementById('big-btn');
+            const transitionModal = document.getElementById('transition-modal');
+            const transitionOkBtn = document.getElementById('transition-ok-btn');
+            
+            // Обработчик клика по большой кнопке
+            bigButton.addEventListener('click', function() {
+                openModal('transition-modal');
+            });
+            
+            // Обработчик клика по кнопке "Хорошо"
+            transitionOkBtn.addEventListener('click', function() {
+                closeModal('transition-modal');
+                goToSlide(2);
+            });
+        }
+        
+        // Код для второго слайда
+        const imagesSlide2 = [
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Catherine_I_of_Russia_1725.jpg/985px-Catherine_I_of_Russia_1725.jpg',
+            'https://i.pinimg.com/736x/b9/20/48/b9204877d434be9fc6c1a62ad5a468be.jpg',
+            'https://i.pinimg.com/originals/31/f3/62/31f3623e10a591f8600887ab6efa967d.jpg',
+            'https://i.pinimg.com/736x/f0/b4/9c/f0b49cfabeb0e9fe98c15b8644c19c01.jpg',
+            'https://i.pinimg.com/736x/58/6e/8e/586e8e12159ded7a5f395c84fe9b3080.jpg',
+            'https://i.pinimg.com/736x/58/6e/8e/586e8e12159ded7a5f395c84fe9b3080.jpg',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Catherine_I_of_Russia_by_Nattier.jpg/960px-Catherine_I_of_Russia_by_Nattier.jpg'
+        ];
+        
+        let timeLeftSlide2 = 300;
+        let timerIntervalSlide2 = null;
+        let hintEnabledSlide2 = false;
+        
+        // Инициализация второго слайда
+        function initSlide2() {
+            initImagesSlide2();
+            initNumbersSlide2();
+            startTimerSlide2();
+            
+            window.addEventListener('resize', function() {
+                document.getElementById('images-container-2').innerHTML = '';
+                document.getElementById('numbers-container-2').innerHTML = '';
+                initImagesSlide2();
+                initNumbersSlide2();
+            });
+            
+            // Обработчик нажатия Enter для второго слайда
+            const answerInput = document.getElementById('answer');
+            if (answerInput) {
+                answerInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkAnswerSlide2();
+                    }
+                });
+            }
+        }
+        
+        // Инициализация декоративных изображений Екатерины для второго слайда
+        function initImagesSlide2() {
+            const container = document.getElementById('images-container-2');
+            const totalImages = 25;
+            
+            const contentContainer = document.querySelector('.content-container-2');
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            const forbiddenZone = {
+                left: containerRect.left - 50,
+                right: containerRect.right + 50,
+                top: containerRect.top - 50,
+                bottom: containerRect.bottom + 50
+            };
+            
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            for (let i = 0; i < totalImages; i++) {
+                const img = document.createElement('img');
+                img.className = 'decorative-image';
+                
+                const randomImageIndex = Math.floor(Math.random() * imagesSlide2.length);
+                img.src = imagesSlide2[randomImageIndex];
+                
+                const size = 100 + Math.random() * 100;
+                img.style.width = `${size}px`;
+                img.style.height = `${size}px`;
+                
+                let attempts = 0;
+                let x, y;
+                
+                do {
+                    x = Math.random() * (screenWidth - size);
+                    y = Math.random() * (screenHeight - size);
+                    attempts++;
+                    
+                    if (attempts > 50) break;
+                    
+                } while (
+                    x + size > forbiddenZone.left && 
+                    x < forbiddenZone.right && 
+                    y + size > forbiddenZone.top && 
+                    y < forbiddenZone.bottom
+                );
+                
+                img.style.left = `${x}px`;
+                img.style.top = `${y}px`;
+                
+                const rotation = -25 + Math.random() * 50;
+                img.style.transform = `rotate(${rotation}deg)`;
+                
+                const opacity = 0.5 + Math.random() * 0.3;
+                img.style.opacity = opacity;
+                
+                // Случайная задержка анимации
+                const delay = Math.random() * 8;
+                img.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(img);
+            }
+        }
+        
+        // Инициализация декоративных чисел 1-9 для второго слайда
+        function initNumbersSlide2() {
+            const container = document.getElementById('numbers-container-2');
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            
+            const contentContainer = document.querySelector('.content-container-2');
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            const forbiddenZone = {
+                left: containerRect.left - 30,
+                right: containerRect.right + 30,
+                top: containerRect.top - 30,
+                bottom: containerRect.bottom + 30
+            };
+            
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            numbers.forEach(num => {
+                const count = (num === 1 || num === 4) ? 11 : 8;
+                
+                for (let i = 0; i < count; i++) {
+                    const number = document.createElement('div');
+                    number.className = 'number';
+                    number.textContent = num;
+                    
+                    const size = 40 + Math.random() * 50;
+                    number.style.fontSize = `${size}px`;
+                    
+                    const colors = [
+                        '#8a2be2', '#0000ff', '#ff0000', '#008000', 
+                        '#ff8c00', '#9400d3', '#ff1493', '#00ced1', '#ff4500',
+                        '#32cd32', '#ff00ff', '#00ff00', '#ffff00'
+                    ];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    number.style.color = color;
+                    
+                    let attempts = 0;
+                    let x, y;
+                    
+                    do {
+                        x = Math.random() * (screenWidth - size * 1.5);
+                        y = Math.random() * (screenHeight - size * 1.5);
+                        attempts++;
+                        
+                        if (attempts > 30) break;
+                        
+                    } while (
+                        x + size > forbiddenZone.left && 
+                        x < forbiddenZone.right && 
+                        y + size > forbiddenZone.top && 
+                        y < forbiddenZone.bottom
+                    );
+                    
+                    number.style.left = `${x}px`;
+                    number.style.top = `${y}px`;
+                    
+                    const rotation = -30 + Math.random() * 60;
+                    number.style.transform = `rotate(${rotation}deg)`;
+                    
+                    const opacity = 0.7 + Math.random() * 0.2;
+                    number.style.opacity = opacity;
+                    
+                    // Случайная задержка анимации
+                    const delay = Math.random() * 10;
+                    number.style.animationDelay = `${delay}s`;
+                    
+                    container.appendChild(number);
+                }
+            });
+        }
+        
+        // Запуск таймера для второго слайда
+        function startTimerSlide2() {
+            updateTimerDisplaySlide2();
+            
+            timerIntervalSlide2 = setInterval(() => {
+                timeLeftSlide2--;
+                updateTimerDisplaySlide2();
+                
+                if (timeLeftSlide2 <= 0) {
+                    clearInterval(timerIntervalSlide2);
+                    enableHintSlide2();
+                }
+            }, 1000);
+        }
+        
+        // Обновление отображения таймера для второго слайда
+        function updateTimerDisplaySlide2() {
+            const timerElement = document.getElementById('timer-2');
+            const minutes = Math.floor(timeLeftSlide2 / 60);
+            const seconds = timeLeftSlide2 % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeftSlide2 <= 60) {
+                timerElement.style.color = '#ff0000';
+            } else if (timeLeftSlide2 <= 120) {
+                timerElement.style.color = '#ff8c00';
+            }
+        }
+        
+        // Активация кнопки подсказки для второго слайда
+        function enableHintSlide2() {
+            hintEnabledSlide2 = true;
+            const hintBtn = document.getElementById('hint-btn');
+            hintBtn.disabled = false;
+            hintBtn.style.backgroundColor = '#4b0082';
+            hintBtn.style.color = 'white';
+            hintBtn.textContent = 'Показать подсказку';
+            
+            hintBtn.style.animation = 'pulse 1.5s infinite';
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(75, 0, 130, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(75, 0, 130, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(75, 0, 130, 0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Показать подсказку для второго слайда
+        function showHintSlide2() {
+            openModal('hint-modal');
+        }
+        
+        // Обновление индикатора ответа для второго слайда
+        function updateAnswerIndicatorSlide2(isCorrect, message) {
+            const indicator = document.getElementById('answer-indicator-2');
+            const dot = document.getElementById('indicator-dot-2');
+            const text = document.getElementById('indicator-text-2');
+            
+            indicator.classList.add('show');
+            if (isCorrect) {
+                dot.className = 'indicator-dot correct';
+                text.textContent = 'Верно!';
+                text.style.color = '#4CAF50';
+            } else {
+                dot.className = 'indicator-dot incorrect';
+                text.textContent = message || 'Неверно, Катенька';
+                text.style.color = '#f44336';
+            }
+            
+            // Автоматическое скрытие через 3 секунды
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Проверка ответа для второго слайда
+        function checkAnswerSlide2() {
+            const answerInput = document.getElementById('answer');
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            const correctAnswers = ['гравитация', 'притяжение'];
+            
+            if (userAnswer === '') {
+                updateAnswerIndicatorSlide2(false, 'Введите ответ!');
+                return;
+            }
+            
+            if (correctAnswers.includes(userAnswer)) {
+                updateAnswerIndicatorSlide2(true);
+                
+                if (userAnswer === 'притяжение') {
+                    setTimeout(() => {
+                        openModal('attraction-modal');
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        openModal('correct-modal');
+                    }, 500);
+                }
+            } else {
+                updateAnswerIndicatorSlide2(false);
+                // Не показываем модальное окно при неверном ответе
+            }
+        }
+        
+        // Код для третьего слайда
+        const imagesSlide3 = [
+            'https://i.pinimg.com/736x/39/e3/d3/39e3d3b1eb3397837b55dea53c09da42.jpg',
+            'https://i.pinimg.com/736x/92/5a/48/925a48a5bd767e86a97af1899322f3cc.jpg',
+            'https://i.pinimg.com/736x/c5/fc/92/c5fc92b10c990fc1af4e06c23e1dd99f.jpg',
+            'https://serpuhov-museum.ru/wp-content/uploads/2022/05/Portret-Ekateriny-II-.jpg',
+            'https://i.pinimg.com/736x/35/02/63/3502636b98c8c65769fb937e48c990b1.jpg',            
+        ];
+        
+        let timeLeftSlide3 = 300;
+        let timerIntervalSlide3 = null;
+        let hintEnabledSlide3 = false;
+        let secretTimeLeftSlide3 = 0;
+        let secretTimerIntervalSlide3 = null;
+        
+        // Инициализация третьего слайда
+        function initSlide3() {
+            initImagesSlide3();
+            initNumbersSlide3();
+            startTimerSlide3();
+            startSecretTimerSlide3();
+            
+            window.addEventListener('resize', function() {
+                document.getElementById('images-container-3').innerHTML = '';
+                document.getElementById('numbers-container-3').innerHTML = '';
+                initImagesSlide3();
+                initNumbersSlide3();
+            });
+            
+            // Обработчик нажатия Enter для третьего слайда
+            const answerInput = document.getElementById('answer-3');
+            if (answerInput) {
+                answerInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkAnswerSlide3();
+                    }
+                });
+            }
+        }
+        
+        // Инициализация декоративных изображений Екатерины для третьего слайда
+        function initImagesSlide3() {
+            const container = document.getElementById('images-container-3');
+            const totalImages = 25;
+            
+            const contentContainer = document.querySelector('.content-container-3');
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            const forbiddenZone = {
+                left: containerRect.left - 50,
+                right: containerRect.right + 50,
+                top: containerRect.top - 50,
+                bottom: containerRect.bottom + 50
+            };
+            
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            for (let i = 0; i < totalImages; i++) {
+                const img = document.createElement('img');
+                img.className = 'decorative-image';
+                
+                const randomImageIndex = Math.floor(Math.random() * imagesSlide3.length);
+                img.src = imagesSlide3[randomImageIndex];
+                
+                const size = 100 + Math.random() * 100;
+                img.style.width = `${size}px`;
+                img.style.height = `${size}px`;
+                
+                let attempts = 0;
+                let x, y;
+                
+                do {
+                    x = Math.random() * (screenWidth - size);
+                    y = Math.random() * (screenHeight - size);
+                    attempts++;
+                    
+                    if (attempts > 50) break;
+                    
+                } while (
+                    x + size > forbiddenZone.left && 
+                    x < forbiddenZone.right && 
+                    y + size > forbiddenZone.top && 
+                    y < forbiddenZone.bottom
+                );
+                
+                img.style.left = `${x}px`;
+                img.style.top = `${y}px`;
+                
+                const rotation = -25 + Math.random() * 50;
+                img.style.transform = `rotate(${rotation}deg)`;
+                
+                const opacity = 0.5 + Math.random() * 0.3;
+                img.style.opacity = opacity;
+                
+                // Случайная задержка анимации
+                const delay = Math.random() * 8;
+                img.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(img);
+            }
+        }
+        
+        // Инициализация декоративных чисел 1-9 для третьего слайда
+        function initNumbersSlide3() {
+            const container = document.getElementById('numbers-container-3');
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            
+            const contentContainer = document.querySelector('.content-container-3');
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            const forbiddenZone = {
+                left: containerRect.left - 30,
+                right: containerRect.right + 30,
+                top: containerRect.top - 30,
+                bottom: containerRect.bottom + 30
+            };
+            
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // Специальный цвет для цифр 2 и 5
+            const specialColor = '#ff6b6b';
+            const specialColorAlt = '#ff4757';
+            
+            numbers.forEach(num => {
+                const count = (num === 2 || num === 5) ? 11 : 8;
+                
+                for (let i = 0; i < count; i++) {
+                    const number = document.createElement('div');
+                    number.className = 'number';
+                    number.textContent = num;
+                    
+                    const size = 40 + Math.random() * 50;
+                    number.style.fontSize = `${size}px`;
+                    
+                    let color;
+                    if (num === 2 || num === 5) {
+                        color = (i % 2 === 0) ? specialColor : specialColorAlt;
+                    } else {
+                        const colors = [
+                            '#0000ff', '#008000', '#ff8c00', '#9400d3', '#ff1493', 
+                            '#00ced1', '#ff4500', '#32cd32', '#ff00ff', '#00ff00', '#ffff00'
+                        ];
+                        color = colors[Math.floor(Math.random() * colors.length)];
+                    }
+                    number.style.color = color;
+                    
+                    let attempts = 0;
+                    let x, y;
+                    
+                    do {
+                        x = Math.random() * (screenWidth - size * 1.5);
+                        y = Math.random() * (screenHeight - size * 1.5);
+                        attempts++;
+                        
+                        if (attempts > 30) break;
+                        
+                    } while (
+                        x + size > forbiddenZone.left && 
+                        x < forbiddenZone.right && 
+                        y + size > forbiddenZone.top && 
+                        y < forbiddenZone.bottom
+                    );
+                    
+                    number.style.left = `${x}px`;
+                    number.style.top = `${y}px`;
+                    
+                    const rotation = -30 + Math.random() * 60;
+                    number.style.transform = `rotate(${rotation}deg)`;
+                    
+                    const opacity = 0.7 + Math.random() * 0.2;
+                    number.style.opacity = opacity;
+                    
+                    // Случайная задержка анимации
+                    const delay = Math.random() * 10;
+                    number.style.animationDelay = `${delay}s`;
+                    
+                    container.appendChild(number);
+                }
+            });
+        }
+        
+        // Запуск таймера для третьего слайда
+        function startTimerSlide3() {
+            updateTimerDisplaySlide3();
+            
+            timerIntervalSlide3 = setInterval(() => {
+                timeLeftSlide3--;
+                updateTimerDisplaySlide3();
+                
+                if (timeLeftSlide3 <= 0) {
+                    clearInterval(timerIntervalSlide3);
+                    enableHintSlide3();
+                }
+            }, 1000);
+        }
+        
+        // Обновление отображения таймера для третьего слайда
+        function updateTimerDisplaySlide3() {
+            const timerElement = document.getElementById('timer-3');
+            const minutes = Math.floor(timeLeftSlide3 / 60);
+            const seconds = timeLeftSlide3 % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeftSlide3 <= 60) {
+                timerElement.style.color = '#ff0000';
+            } else if (timeLeftSlide3 <= 120) {
+                timerElement.style.color = '#ff8c00';
+            }
+        }
+        
+        // Активация кнопки подсказки для третьего слайда
+        function enableHintSlide3() {
+            hintEnabledSlide3 = true;
+            const hintBtn = document.getElementById('hint-btn-3');
+            hintBtn.disabled = false;
+            hintBtn.style.backgroundColor = '#ff4757';
+            hintBtn.style.color = 'white';
+            hintBtn.textContent = 'Показать подсказку';
+            
+            hintBtn.style.animation = 'pulse 1.5s infinite';
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Показать подсказку для третьего слайда
+        function showHintSlide3() {
+            openModal('hint-modal-3');
+        }
+        
+        // Обновление индикатора ответа для третьего слайда
+        function updateAnswerIndicatorSlide3(isCorrect, message) {
+            const indicator = document.getElementById('answer-indicator-3');
+            const dot = document.getElementById('indicator-dot-3');
+            const text = document.getElementById('indicator-text-3');
+            
+            indicator.classList.add('show');
+            if (isCorrect) {
+                dot.className = 'indicator-dot correct';
+                text.textContent = 'Верно!';
+                text.style.color = '#4CAF50';
+            } else {
+                dot.className = 'indicator-dot incorrect';
+                text.textContent = message || 'Неверно, Катенька';
+                text.style.color = '#f44336';
+            }
+            
+            // Автоматическое скрытие через 3 секунды
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Проверка ответа для третьего слайда
+        function checkAnswerSlide3() {
+            const answerInput = document.getElementById('answer-3');
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            const correctAnswers = ['идея'];
+            const closeAnswers = ['мысль', 'размышление', 'замысел'];
+            
+            if (userAnswer === '') {
+                updateAnswerIndicatorSlide3(false, 'Введите ответ!');
+                return;
+            }
+            
+            if (correctAnswers.includes(userAnswer)) {
+                updateAnswerIndicatorSlide3(true);
+                setTimeout(() => {
+                    openModal('correct-modal-3');
+                }, 500);
+            } else if (closeAnswers.includes(userAnswer)) {
+                updateAnswerIndicatorSlide3(false, 'Близко, но нет!');
+                setTimeout(() => {
+                    openModal('close-modal-3');
+                }, 500);
+            } else {
+                updateAnswerIndicatorSlide3(false);
+                // Не показываем модальное окно при неверном ответе
+            }
+        }
+        
+        // Секретный таймер для третьего слайда
+        function startSecretTimerSlide3() {
+            secretTimeLeftSlide3 = 0;
+            updateSecretTimerDisplaySlide3();
+            
+            secretTimerIntervalSlide3 = setInterval(() => {
+                secretTimeLeftSlide3++;
+                updateSecretTimerDisplaySlide3();
+            }, 1000);
+        }
+        
+        function updateSecretTimerDisplaySlide3() {
+            const secretTimerElement = document.getElementById('secret-timer-3');
+            const minutes = Math.floor(secretTimeLeftSlide3 / 60);
+            const seconds = secretTimeLeftSlide3 % 60;
+            secretTimerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Показать секретное сообщение для третьего слайда
+        function showSecretMessageSlide3() {
+            openModal('secret-modal-3');
+        }
+        
+        // Код для четвертого слайда
+        const imagesSlide4 = [
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg',
+            'https://radika1.link/2026/01/29/photo_2025-12-05_10-32-05499e2d34ac91bbf3.jpg'
+        ];
+        
+        let timeLeft1Slide4 = 120;
+        let timeLeft2Slide4 = 300;
+        let timerInterval1Slide4 = null;
+        let timerInterval2Slide4 = null;
+        let hint1EnabledSlide4 = false;
+        let hint2EnabledSlide4 = false;
+        let answer1CorrectSlide4 = false;
+        let answer2CorrectSlide4 = false;
+        let secretTimeElapsedSlide4 = 0;
+        let secretTimerIntervalSlide4 = null;
+        
+        // Пасхальное яйцо с числом 452
+        let easterClickCount = 0;
+        let easterClickTimeout = null;
+        let easterFirstClickTime = null;
+        const EGG_CLICKS_NEEDED = 11;
+        const EGG_CLICK_TIMEOUT = 3000; // 3 секунды
+        
+        // Инициализация четвертого слайда
+        function initSlide4() {
+            initImagesSlide4();
+            initNumbersSlide4();
+            startTimer1Slide4();
+            startTimer2Slide4();
+            startSecretTimerSlide4();
+            initEasterEgg();
+            
+            window.addEventListener('resize', function() {
+                document.getElementById('images-container-4').innerHTML = '';
+                document.getElementById('numbers-container-4').innerHTML = '';
+                initImagesSlide4();
+                initNumbersSlide4();
+            });
+            
+            // Обработчики Enter для четвертого слайда
+            const answer1Input4 = document.getElementById('answer1-4');
+            if (answer1Input4) {
+                answer1Input4.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkAnswer1Slide4();
+                    }
+                });
+            }
+            
+            const answer2Input4 = document.getElementById('answer2-4');
+            if (answer2Input4) {
+                answer2Input4.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkAnswer2Slide4();
+                    }
+                });
+            }
+        }
+        
+        // Инициализация декоративных изображений для четвертого слайда - ТОЧНО 11 картинок слева и 11 справа
+        function initImagesSlide4() {
+            const container = document.getElementById('images-container-4');
+            
+            const contentContainer = document.querySelector('.content-container-4');
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // ОПРЕДЕЛЯЕМ ГРАНИЦЫ БЛОКА
+            const blockLeft = containerRect.left;
+            const blockRight = containerRect.right;
+            const blockTop = containerRect.top;
+            const blockBottom = containerRect.bottom;
+            
+            // СОЗДАЕМ РОВНО 11 ИЗОБРАЖЕНИЙ СЛЕВА ОТ БЛОКА
+            for (let i = 0; i < 11; i++) {
+                const img = document.createElement('img');
+                img.className = 'decorative-image';
+                img.src = imagesSlide4[0];
+                
+                const size = 80 + Math.random() * 70;
+                img.style.width = `${size}px`;
+                img.style.height = `${size}px`;
+                
+                // ВЫСЧИТЫВАЕМ X-КООРДИНАТУ: случайно от 10px до левой границы блока минус 20px
+                const maxX = blockLeft - 20;
+                const minX = 10;
+                const x = Math.random() * (maxX - minX - size) + minX;
+                
+                // ВЫСЧИТЫВАЕМ Y-КООРДИНАТУ: равномерно распределяем по высоте экрана
+                const sectionHeight = screenHeight / 11;
+                const y = i * sectionHeight + Math.random() * (sectionHeight - size);
+                
+                img.style.left = `${x}px`;
+                img.style.top = `${y}px`;
+                
+                // Случайный поворот
+                const rotation = -25 + Math.random() * 50;
+                img.style.transform = `rotate(${rotation}deg)`;
+                
+                // Случайная прозрачность
+                const opacity = 0.5 + Math.random() * 0.3;
+                img.style.opacity = opacity;
+                
+                // Случайная задержка анимации
+                const delay = Math.random() * 8;
+                img.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(img);
+            }
+            
+            // СОЗДАЕМ РОВНО 11 ИЗОБРАЖЕНИЙ СПРАВА ОТ БЛОКА
+            for (let i = 0; i < 11; i++) {
+                const img = document.createElement('img');
+                img.className = 'decorative-image';
+                img.src = imagesSlide4[0];
+                
+                const size = 80 + Math.random() * 70;
+                img.style.width = `${size}px`;
+                img.style.height = `${size}px`;
+                
+                // ВЫСЧИТЫВАЕМ X-КООРДИНАТУ: случайно от правой границы блока +20px до конца экрана -10px
+                const minX = blockRight + 20;
+                const maxX = screenWidth - size - 10;
+                const x = Math.random() * (maxX - minX) + minX;
+                
+                // ВЫСЧИТЫВАЕМ Y-КООРДИНАТУ: равномерно распределяем по высоте экрана
+                const sectionHeight = screenHeight / 11;
+                const y = i * sectionHeight + Math.random() * (sectionHeight - size);
+                
+                img.style.left = `${x}px`;
+                img.style.top = `${y}px`;
+                
+                // Случайный поворот
+                const rotation = -25 + Math.random() * 50;
+                img.style.transform = `rotate(${rotation}deg)`;
+                
+                // Случайная прозрачность
+                const opacity = 0.5 + Math.random() * 0.3;
+                img.style.opacity = opacity;
+                
+                // Случайная задержка анимации
+                const delay = Math.random() * 8;
+                img.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(img);
+            }
+        }
+        
+        // Инициализация декоративных чисел для четвертого слайда
+        function initNumbersSlide4() {
+            const container = document.getElementById('numbers-container-4');
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            
+            const contentContainer = document.querySelector('.content-container-4');
+            const containerRect = contentContainer.getBoundingClientRect();
+            
+            const forbiddenZone = {
+                left: containerRect.left - 25,
+                right: containerRect.right + 25,
+                top: containerRect.top - 25,
+                bottom: containerRect.bottom + 25
+            };
+            
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            numbers.forEach(num => {
+                const count = (num === 1 || num === 2) ? 11 : 8;
+                
+                for (let i = 0; i < count; i++) {
+                    const number = document.createElement('div');
+                    number.className = 'number';
+                    number.textContent = num;
+                    
+                    const size = 30 + Math.random() * 40;
+                    number.style.fontSize = `${size}px`;
+                    
+                    const colors = [
+                        '#4CAF50', '#2E7D32', '#ff6b6b', '#0000ff', '#ff8c00', 
+                        '#9400d3', '#ff1493', '#00ced1', '#ff4500', '#32cd32', 
+                        '#ff00ff', '#00ff00', '#ffff00', '#8a2be2', '#ff4757'
+                    ];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    number.style.color = color;
+                    
+                    let attempts = 0;
+                    let x, y;
+                    
+                    do {
+                        x = Math.random() * (screenWidth - size * 1.5);
+                        y = Math.random() * (screenHeight - size * 1.5);
+                        attempts++;
+                        
+                        if (attempts > 30) break;
+                        
+                    } while (
+                        x + size > forbiddenZone.left && 
+                        x < forbiddenZone.right && 
+                        y + size > forbiddenZone.top && 
+                        y < forbiddenZone.bottom
+                    );
+                    
+                    number.style.left = `${x}px`;
+                    number.style.top = `${y}px`;
+                    
+                    const rotation = -30 + Math.random() * 60;
+                    number.style.transform = `rotate(${rotation}deg)`;
+                    
+                    const opacity = 0.7 + Math.random() * 0.2;
+                    number.style.opacity = opacity;
+                    
+                    // Случайная задержка анимации
+                    const delay = Math.random() * 10;
+                    number.style.animationDelay = `${delay}s`;
+                    
+                    container.appendChild(number);
+                }
+            });
+        }
+        
+        // Запуск таймера для подсказки 1 четвертого слайда
+        function startTimer1Slide4() {
+            updateTimerDisplay1Slide4();
+            
+            timerInterval1Slide4 = setInterval(() => {
+                timeLeft1Slide4--;
+                updateTimerDisplay1Slide4();
+                
+                if (timeLeft1Slide4 <= 0) {
+                    clearInterval(timerInterval1Slide4);
+                    enableHint1Slide4();
+                }
+            }, 1000);
+        }
+        
+        // Запуск таймера для подсказки 2 четвертого слайда
+        function startTimer2Slide4() {
+            updateTimerDisplay2Slide4();
+            
+            timerInterval2Slide4 = setInterval(() => {
+                timeLeft2Slide4--;
+                updateTimerDisplay2Slide4();
+                
+                if (timeLeft2Slide4 <= 0) {
+                    clearInterval(timerInterval2Slide4);
+                    enableHint2Slide4();
+                }
+            }, 1000);
+        }
+        
+        // Обновление отображения таймера 1 четвертого слайда
+        function updateTimerDisplay1Slide4() {
+            const timerElement = document.getElementById('timer1-4');
+            const minutes = Math.floor(timeLeft1Slide4 / 60);
+            const seconds = timeLeft1Slide4 % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft1Slide4 <= 30) {
+                timerElement.style.color = '#ff0000';
+            } else if (timeLeft1Slide4 <= 60) {
+                timerElement.style.color = '#ff8c00';
+            }
+        }
+        
+        // Обновление отображения таймера 2 четвертого слайда
+        function updateTimerDisplay2Slide4() {
+            const timerElement = document.getElementById('timer2-4');
+            const minutes = Math.floor(timeLeft2Slide4 / 60);
+            const seconds = timeLeft2Slide4 % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft2Slide4 <= 60) {
+                timerElement.style.color = '#ff0000';
+            } else if (timeLeft2Slide4 <= 120) {
+                timerElement.style.color = '#ff8c00';
+            }
+        }
+        
+        // Активация кнопки подсказки 1 четвертого слайда
+        function enableHint1Slide4() {
+            hint1EnabledSlide4 = true;
+            const hintBtn = document.getElementById('hint1-btn-4');
+            hintBtn.disabled = false;
+            hintBtn.style.backgroundColor = '#2E7D32';
+            hintBtn.style.color = 'white';
+            hintBtn.textContent = 'Я не тупая, подскажи';
+            
+            hintBtn.style.animation = 'pulse 1.5s infinite';
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Активация кнопки подсказки 2 четвертого слайда
+        function enableHint2Slide4() {
+            hint2EnabledSlide4 = true;
+            const hintBtn = document.getElementById('hint2-btn-4');
+            hintBtn.disabled = false;
+            hintBtn.style.backgroundColor = '#2E7D32';
+            hintBtn.style.color = 'white';
+            hintBtn.textContent = 'Еще раз подскажи)';
+            
+            hintBtn.style.animation = 'pulse 1.5s infinite';
+        }
+        
+        // Показать подсказку 1 четвертого слайда
+        function showHint1Slide4() {
+            if (hint1EnabledSlide4) {
+                openModal('hint1-modal-4');
+            }
+        }
+        
+        // Показать подсказку 2 четвертого слайда
+        function showHint2Slide4() {
+            if (hint2EnabledSlide4) {
+                openModal('hint2-modal-4');
+            }
+        }
+        
+        // Обновление индикатора ответа для четвертого слайда
+        function updateAnswerIndicatorSlide4(answerNum, isCorrect, message) {
+            const indicator = document.getElementById(`answer-indicator-4-${answerNum}`);
+            const dot = document.getElementById(`indicator-dot-4-${answerNum}`);
+            const text = document.getElementById(`indicator-text-4-${answerNum}`);
+            
+            indicator.classList.add('show');
+            if (isCorrect) {
+                dot.className = 'indicator-dot correct';
+                text.textContent = 'Верно!';
+                text.style.color = '#4CAF50';
+            } else {
+                dot.className = 'indicator-dot incorrect';
+                text.textContent = message || 'Неверно, Катенька';
+                text.style.color = '#f44336';
+            }
+            
+            // Автоматическое скрытие через 3 секунды
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Проверка первого ответа четвертого слайда
+        function checkAnswer1Slide4() {
+            const answerInput = document.getElementById('answer1-4');
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            const correctAnswers = ['бедный', 'бедная'];
+            
+            if (userAnswer === '') {
+                updateAnswerIndicatorSlide4(1, false, 'Введите ответ!');
+                return;
+            }
+            
+            if (correctAnswers.includes(userAnswer)) {
+                answer1CorrectSlide4 = true;
+                updateAnswerIndicatorSlide4(1, true);
+                updateStatusSlide4(1, true, 'Верно!');
+                if (answer1CorrectSlide4 && answer2CorrectSlide4) {
+                    setTimeout(() => openModal('correct-modal-4'), 500);
+                }
+            } else {
+                answer1CorrectSlide4 = false;
+                updateAnswerIndicatorSlide4(1, false);
+                updateStatusSlide4(1, false, 'Неверно');
+            }
+        }
+        
+        // Проверка второго ответа четвертого слайда
+        function checkAnswer2Slide4() {
+            const answerInput = document.getElementById('answer2-4');
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            const correctAnswers = ['богатый', 'богатая'];
+            
+            if (userAnswer === '') {
+                updateAnswerIndicatorSlide4(2, false, 'Введите ответ!');
+                return;
+            }
+            
+            if (correctAnswers.includes(userAnswer)) {
+                answer2CorrectSlide4 = true;
+                updateAnswerIndicatorSlide4(2, true);
+                updateStatusSlide4(2, true, 'Верно!');
+                if (answer1CorrectSlide4 && answer2CorrectSlide4) {
+                    setTimeout(() => openModal('correct-modal-4'), 500);
+                }
+            } else {
+                answer2CorrectSlide4 = false;
+                updateAnswerIndicatorSlide4(2, false);
+                updateStatusSlide4(2, false, 'Неверно');
+            }
+        }
+        
+        // Обновление статуса ответа четвертого слайда
+        function updateStatusSlide4(answerNum, isCorrect, text) {
+            const statusDot = document.getElementById(`status${answerNum}-4`);
+            const statusText = document.getElementById(`status-text${answerNum}-4`);
+            
+            if (isCorrect) {
+                statusDot.className = 'status-dot correct';
+                statusText.textContent = text;
+                statusText.style.color = '#4CAF50';
+            } else {
+                statusDot.className = 'status-dot incorrect';
+                statusText.textContent = text;
+                statusText.style.color = '#f44336';
+            }
+        }
+        
+        // Запуск секретного таймера четвертого слайда
+        function startSecretTimerSlide4() {
+            secretTimerIntervalSlide4 = setInterval(() => {
+                secretTimeElapsedSlide4++;
+                updateSecretTimerDisplaySlide4();
+            }, 1000);
+        }
+        
+        // Обновление отображения секретного таймера четвертого слайда
+        function updateSecretTimerDisplaySlide4() {
+            const timerElement = document.getElementById('secret-timer-4');
+            const minutes = Math.floor(secretTimeElapsedSlide4 / 60);
+            const seconds = secretTimeElapsedSlide4 % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Показать секретное сообщение четвертого слайда
+        function showSecretMessageSlide4() {
+            openModal('secret-modal-4');
+        }
+        
+        // Пасхальное яйцо с числом 452 - улучшенная версия с 3-секундным таймером
+        function initEasterEgg() {
+            const secretNumbers = document.querySelectorAll('.secret-number');
+            
+            secretNumbers.forEach(number => {
+                number.addEventListener('click', handleEasterNumberClick);
+            });
+            
+            // Сброс счетчика через 3 секунды неактивности
+            document.addEventListener('mousemove', () => {
+                if (easterClickTimeout) {
+                    clearTimeout(easterClickTimeout);
+                }
+                easterClickTimeout = setTimeout(() => {
+                    if (easterClickCount > 0) {
+                        console.log('Сброс счетчика пасхального яйца - время истекло');
+                        easterClickCount = 0;
+                        easterFirstClickTime = null;
+                    }
+                }, EGG_CLICK_TIMEOUT);
+            });
+            
+            // Обработчик Enter для поля ввода пароля пасхального яйца
+            const easterPasswordInput = document.getElementById('easter-password');
+            if (easterPasswordInput) {
+                easterPasswordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkEasterPassword();
+                    }
+                });
+                
+                // Ограничиваем ввод только цифрами
+                easterPasswordInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    if (this.value.length > 3) {
+                        this.value = this.value.substring(0, 3);
+                    }
+                });
+            }
+        }
+        
+        function handleEasterNumberClick(event) {
+            // Предотвращаем всплытие события
+            event.stopPropagation();
+            
+            const currentTime = Date.now();
+            
+            // Если это первый клик или прошло больше 3 секунд с последнего клика
+            if (!easterFirstClickTime || (currentTime - easterFirstClickTime) > EGG_CLICK_TIMEOUT) {
+                console.log('Начало нового цикла кликов (3 секунды)');
+                easterClickCount = 1;
+                easterFirstClickTime = currentTime;
+            } else {
+                // Если в пределах 3 секунд
+                easterClickCount++;
+            }
+            
+            console.log(`Кликов по пасхальному яйцу: ${easterClickCount} (осталось времени: ${EGG_CLICK_TIMEOUT - (currentTime - easterFirstClickTime)}мс)`);
+            
+            // Еле заметная анимация при клике
+            const number = event.target;
+            number.style.transform = number.style.transform + ' scale(0.95)';
+            setTimeout(() => {
+                number.style.transform = number.style.transform.replace(' scale(0.95)', '');
+            }, 150);
+            
+            // Проверяем достигли ли нужного количества кликов в течение 3 секунд
+            if (easterClickCount >= EGG_CLICKS_NEEDED) {
+                console.log('УСПЕХ! 11 кликов за 3 секунды!');
+                // Сбрасываем счетчик
+                easterClickCount = 0;
+                easterFirstClickTime = null;
+                
+                // Показываем модальное окно для ввода пароля
+                openEasterPasswordModal();
+            }
+            
+            // Сбрасываем таймер сброса
+            if (easterClickTimeout) {
+                clearTimeout(easterClickTimeout);
+            }
+            
+            // Устанавливаем новый таймер сброса через 3 секунды
+            easterClickTimeout = setTimeout(() => {
+                if (easterClickCount > 0) {
+                    console.log('Сброс счетчика пасхального яйца - 3 секунды прошли');
+                    easterClickCount = 0;
+                    easterFirstClickTime = null;
+                }
+            }, EGG_CLICK_TIMEOUT);
+        }
+        
+        function openEasterPasswordModal() {
+            const modal = document.getElementById('easter-egg-modal');
+            const passwordInput = document.getElementById('easter-password');
+            
+            // Сброс поля ввода
+            passwordInput.value = '';
+            
+            // Показываем модальное окно
+            modal.classList.add('active');
+            
+            // Фокусируемся на поле ввода
+            setTimeout(() => {
+                passwordInput.focus();
+            }, 300);
+        }
+        
+        function checkEasterPassword() {
+            const passwordInput = document.getElementById('easter-password');
+            const password = passwordInput.value.trim();
+            
+            if (password === '452') {
+                closeModal('easter-egg-modal');
+                setTimeout(() => {
+                    openModal('easter-success-modal');
+                }, 300);
+            } else {
+                // Небольшая анимация ошибки
+                passwordInput.style.borderColor = '#f44336';
+                passwordInput.style.boxShadow = '0 0 0 3px rgba(244, 67, 54, 0.2)';
+                passwordInput.value = '';
+                
+                setTimeout(() => {
+                    passwordInput.style.borderColor = '#4CAF50';
+                    passwordInput.style.boxShadow = 'none';
+                    passwordInput.focus();
+                }, 1000);
+            }
+        }
+        
+        function easterContinue() {
+            closeModal('easter-success-modal');
+            // Остаемся на 4-м слайде
+        }
+        
+        function easterFinish() {
+            closeModal('easter-success-modal');
+            setTimeout(() => {
+                openModal('easter-finish-modal');
+            }, 300);
+        }
+        
+        function closeAllModals() {
+            const modals = document.querySelectorAll('.modal-overlay');
+            modals.forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+        
+        // Код для пятого слайда (Финальный этап)
+        let stage = 1;
+        let answersCorrect = [false, false, false];
+        let birthdayCorrect = false;
+        let lettersCorrect = false;
+        
+        // Инициализация пятого слайда
+        function initSlide5() {
+            // Настройка обработчиков Enter
+            document.getElementById('answer1').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkAnswer1();
+            });
+            document.getElementById('answer2').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkAnswer2();
+            });
+            document.getElementById('answer3a').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkAnswer3();
+            });
+            document.getElementById('answer3b').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkAnswer3();
+            });
+            document.getElementById('birthday').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkBirthday();
+            });
+            document.getElementById('letters').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkLetters();
+            });
+            document.getElementById('final-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkFinalPassword();
+            });
+            
+            // Форматирование поля пароля
+            document.getElementById('final-password').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        }
+        
+        // Проверка ответа 1
+        function checkAnswer1() {
+            const answer = document.getElementById('answer1').value.trim().toLowerCase();
+            const correctAnswers = ['гравитация', 'притяжение'];
+            
+            if (answer === '') {
+                alert('Пожалуйста, введите ответ на первый вопрос!');
+                return;
+            }
+            
+            if (correctAnswers.includes(answer)) {
+                updateStatus('1', true, 'Верно!');
+                answersCorrect[0] = true;
+            } else {
+                updateStatus('1', false, 'Неверно, попробуй еще раз');
+                answersCorrect[0] = false;
+            }
+            
+            checkAllAnswers();
+        }
+        
+        // Проверка ответа 2
+        function checkAnswer2() {
+            const answer = document.getElementById('answer2').value.trim().toLowerCase();
+            const correctAnswers = ['идея'];
+            
+            if (answer === '') {
+                alert('Пожалуйста, введите ответ на второй вопрос!');
+                return;
+            }
+            
+            if (correctAnswers.includes(answer)) {
+                updateStatus('2', true, 'Верно!');
+                answersCorrect[1] = true;
+            } else {
+                updateStatus('2', false, 'Неверно, попробуй еще раз');
+                answersCorrect[1] = false;
+            }
+            
+            checkAllAnswers();
+        }
+        
+        // Проверка ответа 3
+        function checkAnswer3() {
+            const answer1 = document.getElementById('answer3a').value.trim().toLowerCase();
+            const answer2 = document.getElementById('answer3b').value.trim().toLowerCase();
+            
+            if (answer1 === '' || answer2 === '') {
+                alert('Пожалуйста, введите оба ответа на третий вопрос!');
+                return;
+            }
+            
+            // Проверка комбинаций
+            const correctCombinations = [
+                ['бедный', 'богатый'],
+                ['богатый', 'бедный'],
+                ['бедная', 'богатая'],
+                ['богатая', 'бедная']
+            ];
+            
+            let isCorrect = false;
+            for (let combo of correctCombinations) {
+                if ((answer1 === combo[0] && answer2 === combo[1]) ||
+                    (answer1 === combo[1] && answer2 === combo[0])) {
+                    isCorrect = true;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                updateStatus('3', true, 'Верно!');
+                answersCorrect[2] = true;
+            } else {
+                updateStatus('3', false, 'Неверно, попробуй еще раз');
+                answersCorrect[2] = false;
+            }
+            
+            checkAllAnswers();
+        }
+        
+        // Проверка всех ответов
+        function checkAllAnswers() {
+            const allCorrect = answersCorrect.every(answer => answer === true);
+            const nextBtn = document.getElementById('next-stage1');
+            
+            if (allCorrect) {
+                nextBtn.style.display = 'inline-flex';
+                nextBtn.classList.add('celebrate');
+                setTimeout(() => nextBtn.classList.remove('celebrate'), 1500);
+            } else {
+                nextBtn.style.display = 'none';
+            }
+        }
+        
+        // Проверка даты рождения - ПРАВИЛЬНЫЙ ОТВЕТ: 121
+        function checkBirthday() {
+            const answer = document.getElementById('birthday').value.trim();
+            const correctAnswer = '121';
+            
+            if (answer === '') {
+                alert('Пожалуйста, введите дату рождения!');
+                return;
+            }
+            
+            if (answer === correctAnswer) {
+                updateStatus('birthday', true, 'Верно!');
+                birthdayCorrect = true;
+                document.getElementById('next-stage2').style.display = 'inline-flex';
+                document.getElementById('next-stage2').classList.add('celebrate');
+                setTimeout(() => document.getElementById('next-stage2').classList.remove('celebrate'), 1500);
+            } else {
+                updateStatus('birthday', false, 'Неверно, даже днюху свою не знаешь');
+                birthdayCorrect = false;
+                document.getElementById('next-stage2').style.display = 'none';
+            }
+        }
+        
+        // Проверка букв
+        function checkLetters() {
+            const answer = document.getElementById('letters').value.trim();
+            
+            if (answer === '') {
+                alert('Пожалуйста, введите буквы!');
+                return;
+            }
+            
+            // Проверяем, содержит ли ответ цифры
+            if (/\d/.test(answer)) {
+                updateStatus('letters', false, 'АЛЕЕ ГАРАЖ, БУКВЫ ВПИШИ!');
+                lettersCorrect = false;
+                document.getElementById('next-stage3').style.display = 'none';
+                return;
+            }
+            
+            const upperAnswer = answer.toUpperCase();
+            const correctAnswer = 'ГДБ';
+            
+            if (upperAnswer === correctAnswer) {
+                updateStatus('letters', true, 'Верно!');
+                lettersCorrect = true;
+                document.getElementById('next-stage3').style.display = 'inline-flex';
+                document.getElementById('next-stage3').classList.add('celebrate');
+                setTimeout(() => document.getElementById('next-stage3').classList.remove('celebrate'), 1500);
+            } else if (upperAnswer === 'ГДБ'.split('').sort().join('')) {
+                updateStatus('letters', false, 'Буквы правильные, но порядок неверный!');
+                lettersCorrect = false;
+                document.getElementById('next-stage3').style.display = 'none';
+            } else {
+                updateStatus('letters', false, 'Неверно, попробуй еще раз');
+                lettersCorrect = false;
+                document.getElementById('next-stage3').style.display = 'none';
+            }
+        }
+        
+               
+        // Создание конфетти (обновленная версия, которую можно вызывать несколько раз)
+        function createConfetti() {
+            const colors = ['#FFC107', '#9C27B0', '#4CAF50', '#2196F3', '#FF5722'];
+            const container = document.querySelector('.content-container-5');
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                
+                // Анимация
+                const animationDuration = Math.random() * 3 + 2;
+                confetti.style.animation = `confettiRain ${animationDuration}s linear forwards`;
+                confetti.style.animationDelay = Math.random() * 1 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                // Удаляем конфетти после анимации
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.remove();
+                    }
+                }, animationDuration * 1000);
+            }
+        }
+        
+        // Функция для воспроизведения праздничного видео
+        function playCelebrationVideo() {
+            // Если видео уже есть, перезапускаем его
+            if (videoElement) {
+                videoElement.remove();
+            }
+            
+            // Создаем видео элемент
+            videoElement = document.createElement('video');
+            videoElement.src = 'https://raw.githubusercontent.com/TIG03/assets/main/celebration.MP4';
+            videoElement.controls = false;
+            videoElement.autoplay = true;
+            videoElement.muted = false; // Включаем звук
+            videoElement.loop = false;
+            videoElement.className = 'celebration-video';
+            
+            // Добавляем видео на страницу
+            document.body.appendChild(videoElement);
+            
+            // Удаляем видео после завершения воспроизведения
+            videoElement.addEventListener('ended', function() {
+                setTimeout(() => {
+                    if (videoElement && videoElement.parentNode) {
+                        videoElement.remove();
+                        videoElement = null;
+                    }
+                }, 1000);
+            });
+            
+            // Также добавляем возможность закрыть видео по клику
+            videoElement.addEventListener('click', function() {
+                if (videoElement && videoElement.parentNode) {
+                    videoElement.remove();
+                    videoElement = null;
+                }
+            });
+        }
+        
+  // ЗАМЕНА: НОВАЯ ФУНКЦИЯ ГАЛАКТИЧЕСКОГО ПОРТАЛА
+        function playGalacticPortalAnimation() {
+            const portal = document.getElementById('galactic-portal');
+            const overlay = portal.querySelector('.portal-overlay');
+            const vortex = document.getElementById('energy-vortex');
+            const core = document.getElementById('portal-core');
+            
+            // Активируем портал
+            portal.classList.add('active');
+            overlay.classList.add('active');
+            
+            // Создаем звезды
+            createPortalStars(portal, 80);
+            
+            // Создаем световые лучи
+            createLightBeams(portal, 24);
+            
+            // Анимация ядра портала
+            core.style.animation = 'none';
+            setTimeout(() => {
+                core.style.animation = 'vortexSpin 1.5s ease-in-out infinite';
+                core.style.width = '100px';
+                core.style.height = '100px';
+            }, 10);
+            
+            // Анимация вихря
+            vortex.style.animation = 'vortexSpin 3s linear infinite';
+            vortex.style.width = '200px';
+            vortex.style.height = '200px';
+            
+            // После завершения анимации показываем финальный слайд
+            setTimeout(() => {
+                // Плавно скрываем портал
+                portal.style.opacity = '0';
+                portal.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => {
+                    portal.classList.remove('active');
+                    portal.style.opacity = '';
+                    portal.style.transition = '';
+                    
+                    // Очищаем динамически созданные элементы
+                    const stars = portal.querySelectorAll('.portal-star');
+                    const beams = portal.querySelectorAll('.light-beam');
+                    stars.forEach(star => star.remove());
+                    beams.forEach(beam => beam.remove());
+                    
+                    // Сбрасываем размеры
+                    core.style.width = '0';
+                    core.style.height = '0';
+                    core.style.animation = 'none';
+                    
+                    vortex.style.width = '0';
+                    vortex.style.height = '0';
+                    vortex.style.animation = 'none';
+                    
+                }, 500);
+            }, 2500);
+        }
+
+        // Создание звезд для портала
+        function createPortalStars(portal, count) {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'portal-star';
+                
+                // Размер звезды
+                const size = 2 + Math.random() * 5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Позиция старта (вокруг центра)
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 200;
+                const startX = Math.cos(angle) * distance;
+                const startY = Math.sin(angle) * distance;
+                
+                // Позиция конца (движение к центру)
+                const endX = -startX * 0.3;
+                const endY = -startY * 0.3;
+                
+                star.style.setProperty('--startX', `${startX}px`);
+                star.style.setProperty('--startY', `${startY}px`);
+                star.style.setProperty('--endX', `${endX}px`);
+                star.style.setProperty('--endY', `${endY}px`);
+                
+                // Цвет звезды
+                const colors = ['#FFD700', '#FF8C00', '#FFFFFF', '#FF69B4', '#00FFFF'];
+                star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Анимация
+                const duration = 1 + Math.random() * 2;
+                const delay = Math.random() * 1.5;
+                star.style.animation = `starFloat ${duration}s ease-out ${delay}s forwards`;
+                
+                // Позиционирование
+                star.style.left = `calc(50% + ${startX}px)`;
+                star.style.top = `calc(50% + ${startY}px)`;
+                
+                portal.appendChild(star);
+                
+                // Удаляем звезду после анимации
+                setTimeout(() => {
+                    if (star.parentNode) star.remove();
+                }, (duration + delay) * 1000);
+            }
+        }
+
+        // Создание световых лучей
+        function createLightBeams(portal, count) {
+            for (let i = 0; i < count; i++) {
+                const beam = document.createElement('div');
+                beam.className = 'light-beam';
+                
+                // Угол поворота
+                const angle = (360 / count) * i;
+                beam.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+                
+                // Анимация
+                const duration = 1.5 + Math.random() * 1;
+                const delay = Math.random() * 0.5;
+                beam.style.animation = `beamExpand ${duration}s ease-out ${delay}s forwards`;
+                
+                portal.appendChild(beam);
+                
+                // Удаляем луч после анимации
+                setTimeout(() => {
+                    if (beam.parentNode) beam.remove();
+                }, (duration + delay) * 1000);
+            }
+        }
+
+        // Обработчик клика на пароль (обновленная версия)
+        function setupPasswordClickListener() {
+            const passwordDisplay = document.querySelector('.password-display-5');
+            const revealHint = document.querySelector('.reveal-hint-5');
+            
+            if (!passwordDisplay) return;
+            
+            // Сброс счетчика при каждом новом открытии
+            clickCount452 = 0;
+            if (clickTimer452) {
+                clearTimeout(clickTimer452);
+                clickTimer452 = null;
+            }
+            
+            passwordDisplay.addEventListener('click', function() {
+                // Первый клик - разблюривание
+                if (this.classList.contains('blurred')) {
+                    this.classList.remove('blurred');
+                    this.classList.add('revealed');
+                    
+                    // Разбиваем цифры на отдельные span для анимации
+                    const numbers = '452';
+                    this.innerHTML = '';
+                    for (let i = 0; i < numbers.length; i++) {
+                        const span = document.createElement('span');
+                        span.textContent = numbers[i];
+                        this.appendChild(span);
+                    }
+                    
+                    // Скрываем подсказку
+                    if (revealHint) {
+                        revealHint.style.opacity = '0';
+                    }
+                    
+                    // Создаем конфетти при первом раскрытии
+                    createConfetti();
+                    
+                    // Начинаем отсчет для счетчика кликов
+                    clickCount452 = 1;
+                    clickTimer452 = setTimeout(() => {
+                        // Сбрасываем счетчик через 5 секунд
+                        clickCount452 = 0;
+                        console.log('Счетчик кликов сброшен (прошло 5 секунд)');
+                    }, 5000);
+                    
+                } 
+                // Последующие клики - создаем конфетти и считаем клики
+                else if (this.classList.contains('revealed')) {
+                    // Создаем конфетти при каждом клике
+                    createConfetti();
+                    
+                    // Увеличиваем счетчик кликов
+                    clickCount452++;
+                    console.log(`Кликов по 452: ${clickCount452}`);
+                    
+                    // Сбрасываем таймер при каждом клике
+                    if (clickTimer452) {
+                        clearTimeout(clickTimer452);
+                    }
+                    
+                    // Устанавливаем новый таймер сброса
+                    clickTimer452 = setTimeout(() => {
+                        clickCount452 = 0;
+                        console.log('Счетчик кликов сброшен (прошло 5 секунд)');
+                    }, 5000);
+                    
+                    // Если нажали 11 раз за 5 секунд - воспроизводим видео
+                    if (clickCount452 >= 11) {
+                        console.log('УРА! 11 кликов за 5 секунд! Воспроизводим видео!');
+                        
+                        // Сбрасываем счетчик
+                        clickCount452 = 0;
+                        if (clickTimer452) {
+                            clearTimeout(clickTimer452);
+                            clickTimer452 = null;
+                        }
+                        
+                        // Воспроизводим видео
+                        playCelebrationVideo();
+                        
+                        // Добавляем дополнительное конфетти
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => createConfetti(), i * 300);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Проверка финального пароля
+        function checkFinalPassword() {
+            const answer = document.getElementById('final-password').value.trim();
+            const correctAnswer = '452';
+            
+            if (answer === '') {
+                alert('Пожалуйста, введите пароль!');
+                return;
+            }
+            
+            if (answer === correctAnswer) {
+                updateStatus('final', true, 'Правильно!');
+                
+                // Запускаем анимацию разрыва пространства
+                playGalacticPortalAnimation();
+                
+                // Ждем окончания анимации и показываем финальное сообщение
+                setTimeout(() => {
+                    // Создаем финальное сообщение
+                    const finalHTML = `
+                        <div class="final-message-5" style="animation: fadeIn 0.8s ease;">
+                            <h2 class="final-title-5">Мы в ахуе, ты это сделала, Катенька!)</h2>
+                            
+                            <p class="final-text-5">
+                                Но ты должна знать, что это тоже не просто числа, а все имело свое значение. 
+                                452 — это значит месяцы рождения великих людей:
+                            </p>
+                            
+                            <p class="final-text-5">
+                                <strong>Екатерина I</strong> родилась в апреле (4 месяц),<br>
+                                <strong>Екатерина II</strong> родилась в мае (5 месяц),<br>
+                                Но <strong>ты, Екатерина III</strong>, родилась в феврале (2 месяц) — то есть 452!
+                            </p>
+                            
+                            <p class="final-text-5">
+                                Но это еще не все! Мы давали тебе много подсказок:
+                            </p>
+                            
+                            <ul>
+                                <li>На первом слайде — портреты первой императрицы, чтобы понять чье день рождение и настойчивое повторение «4» и «1» шесть раз (а не пять!)</li>
+                                <li>На втором — Екатерина II и загадочные «5» с «2», тоже выделяющиеся частотой</li>
+                                <li>На третьем — твои личные «2» и «1» с повторением 6 раз, завершающие цепочку, что все время намекало тебе на 452 и 121.</li>
+                                <li> На 4 слайде (3-я загадка) слева и справа от блока вопроса было 11 твоих фоток - сумма цифер в пароле дает именно это число) Еще одна пасхалочка - левее от блока тот самый пароль (452), куда нужно было нажимать 11 раз чтобы пораньше прийти к победе))</li>
+                                <li>А еще каждый раз намекали подбрасыванием монеты 4.5..2..., а не те монеты, что мы тебе дали, чтобы запутать :)</li>
+                            </ul>
+                            
+                            <p class="final-text-5">
+                                Но ты, Катя, БОЛЬШОЙ МОЛОДЕЦ! Ты это сделала!Надеюсь это было 5 из 10 по уровню сложности))
+                            </p>
+                            
+                            <div class="final-password-5">
+                                <div class="password-display-5 blurred">
+                                    452
+                                    <div class="reveal-hint-5">Нажми, чтобы раскрыть</div>
+                                </div>
+                                <p style="margin-top: 10px; color: #FFC107; opacity: 0; animation: textAppear 0.8s ease forwards 2.2s;">пора открывать подарок)</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Заменяем содержимое контейнера
+                    document.querySelector('.content-container-5').innerHTML = finalHTML;
+                    
+                    // Добавляем обработчик клика на пароль
+                    setTimeout(() => {
+                        setupPasswordClickListener();
+                    }, 100);
+                }, 2000);
+                
+            } else {
+                updateStatus('final', false, 'Неверный пароль, попробуй еще раз');
+            }
+        }
+        
+        // Обновление статуса
+        function updateStatus(elementId, isCorrect, text) {
+            const statusElement = document.getElementById(`status-${elementId}`) || 
+                                 document.getElementById(`status${elementId}`);
+            
+            if (!statusElement) {
+                console.error(`Элемент status-${elementId} не найден`);
+                return;
+            }
+            
+            const statusDot = statusElement.querySelector('.status-dot-5');
+            const statusText = document.getElementById(`status-text-${elementId}`) ||
+                              document.getElementById(`status-text${elementId}`);
+            
+            if (statusDot && statusText) {
+                statusDot.className = 'status-dot-5 ' + (isCorrect ? 'correct' : 'incorrect');
+                statusText.textContent = text;
+                statusText.style.color = isCorrect ? '#4CAF50' : '#f44336';
+            }
+        }
+        
+        // Переход к этапу 2
+        function goToStage2() {
+            document.getElementById('stage1').classList.remove('active');
+            document.getElementById('stage2').classList.add('active');
+            stage = 2;
+        }
+        
+        // Переход к этапу 3
+        function goToStage3() {
+            document.getElementById('stage2').classList.remove('active');
+            document.getElementById('stage3').classList.add('active');
+            stage = 3;
+        }
+        
+        // Переход к этапу 4
+        function goToStage4() {
+            document.getElementById('stage3').classList.remove('active');
+            document.getElementById('stage4').classList.add('active');
+            stage = 4;
+        }
+        
+        // Форматирование пароля
+        function formatPassword() {
+            const input = document.getElementById('final-password');
+            let value = input.value.replace(/[^0-9]/g, '');
+            
+            if (value.length > 3) {
+                value = value.substring(0, 3);
+            }
+            
+            input.value = value;
+        }
+        
+        // Общие функции для управления модальными окнами
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
